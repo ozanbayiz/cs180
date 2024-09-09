@@ -26,8 +26,8 @@
             margin-right: 5vw;
         }
         @media (max-width: 600px) {
-        p {
-            font-size: 0.8em;
+        p, li {
+            font-size: 0.75em;
         }
         .img-text-container {
             flex-direction: column;
@@ -102,13 +102,14 @@
         shoutout fft. done? but I still had to implement the image pyramid
     </p>
     <div class="header-line"></div>
+    <p>ok fine</p>
     <div class="img-text-container">
         <div class="img">
             <img src="./assets/proj1/onion_church_pyramid.png">
         </div>
         <div class="text">
             <p>
-                I divided the height/width of the image by decreasing powers of 2 for each level.
+                At each level, I divided the height/width of the query image by a power of 2.
                 Each iteration would displace the query image 1 px up, down, left, and right, 
                 then pick the shift which yielded the highest metric.
             </p>
