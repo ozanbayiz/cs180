@@ -28,13 +28,28 @@
 
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Flexible column layout */
-            gap: 10px; /* Gap between the images */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Flexible column layout */
+            gap: 10px;
             padding: 10px;
         }
 
         /* Style for the individual images */
         .image-grid img {
+            width: 100%;    /* Make each image fill its grid cell */
+            height: auto;   /* Maintain aspect ratio */
+            border: 1px solid #ccc;  /* Optional border around images */
+        }
+        .image-grid b {
+            width: 100%;    /* Make each image fill its grid cell */
+            height: auto;   /* Maintain aspect ratio */
+        }
+        .image-grid p {
+            width: 100%;    /* Make each image fill its grid cell */
+            height: auto;   /* Maintain aspect ratio */
+            font-size: 0.8em;
+            margin: 0;
+        }
+        .image-grid sub {
             width: 100%;    /* Make each image fill its grid cell */
             height: auto;   /* Maintain aspect ratio */
             border: 1px solid #ccc;  /* Optional border around images */
@@ -109,7 +124,90 @@
     <div class="header-line"></div>
     <p> here are all the images:</p>
     <div class="image-grid">
-        <img src="../proj1/results_pyramid/harvesters.tif">
+        <div>
+            <b>cathethedral</b>
+            <img src="./assets/proj1/results/cathedral.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>church</b>
+            <img src="./assets/proj1/results/church.jpeg">
+            <p>red shift: (58, 3630)</p>
+            <p>green shift: (25, 3)</p>
+        </div>
+        <div>
+            <b>emir</b>
+            <img src="./assets/proj1/results/emir.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>harvesters</b>
+            <img src="./assets/proj1/results/harvesters.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>icon</b>
+            <img src="./assets/proj1/results/icon.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>lady</b>
+            <img src="./assets/proj1/results/lady.jpeg">
+            <p>red shift: (120, 13)</p>
+            <p>green shift: (57, 9)</p>
+        </div>
+        <div>
+            <b>melons</b>
+            <img src="./assets/proj1/results/melons.jpeg">
+            <p>red shift: (176, 14)</p>
+            <p>green shift: (79, 8)</p>
+        </div>
+        <div>
+            <b>monastery</b>
+            <img src="./assets/proj1/results/monastery.jpeg">
+            <p>red shift: (3, 2)</p>
+            <p>green shift: (338, 2)</p>
+        </div>
+        <div>
+            <b>onion church</b>
+            <img src="./assets/proj1/results/onion_church.jpeg">
+            <p>red shift: (107, 34)</p>
+            <p>green shift: (51, 19)</p>
+        </div>
+        <div>
+            <b>sculpture</b>
+            <img src="./assets/proj1/results/sculpture.jpeg">
+            <p>red shift: (140, 3773)</p>
+            <p>green shift: (33, 3789)</p>
+        </div>
+        <div>
+            <b>self portrait</b>
+            <img src="./assets/proj1/results/self_portrait.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>3 generations</b>
+            <img src="./assets/proj1/results/three_generations.jpeg">
+            <p>red shift: (111, 7)</p>
+            <p>green shift: (56, 12)</p>
+        </div>
+        <div>
+            <b>tobolsk</b>
+            <img src="./assets/proj1/results/tobolsk.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
+        <div>
+            <b>train</b>
+            <img src="./assets/proj1/results/train.jpeg">
+            <p>red shift: (106, 41)</p>
+            <p>green shift: (49, 24)</p>
+        </div>
     </div>
 
 
