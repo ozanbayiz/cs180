@@ -9,20 +9,41 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <script>
-        function adjustFontSize() {
-            const ascii_art = document.getElementById("ascii_art");
-            if (window.innerWidth <= 800) {
-                ascii_art.fontSize = `8px`;
-            } else {
-                ascii_art.fontSize = `12px`;
-            }
-        }
-        adjustFontSize();
-        window.addEventListener("resize", adjustFontSize);
-    </script>
-    <div class="ascii-art-container">
-        <div class="ascii-art"><pre id="ascii-art">
+    <div class="ascii-art-container" id="ascii-container">
+        <div class="ascii-art" id="ascii-spider"
+        small-screen-text="
+                  XXX                 XXX     XXX       
+                XXX XXX             XXX XXX XXX XXX     
+               XXX   XXX          XXX             XXX   
+              XXX     XXX       XXX     XXX XXX     XXX 
+              XXX     XXX     XXX     XXX     XXX     XX
+             XXX       XXX    XXX     XXX XXX XXX     XX
+            XXX   XXX  XXX    XXX      XXX   XXX      XX
+            XXX XXX XXX XXX   XXX     XXX XXX XXX     XX
+           XXX  XXX XXX  XXX  XXX     XXX     XXX     XX
+          XXX   XXX  XXX  XXX   XXX     XXX XXX     XXX 
+         XXX    XXX   XXX   XXX   XXX             XXX   
+        XXX    XXX      XXX   XXX   XXX XXX XXX XXX   XX
+      XXX      XXX        XXX  XXX    XXX     XXX    XXX
+    XXX        XXX   XXX    XXX XXX     XXX XXX     XXX 
+  XXX         XXX  XXX XXX    XXX XXX XXX     XXX XXX XX
+XXX           XXX  XXX  XXX         XXX   XXX   XXX     
+             XXX   XXX    XXX XXX XXX XXX     XXX XXX XX
+             XXX   XXX      XXX XXX     XXX XXX     XXX 
+            XXX    XXX         XXX    XXX     XXX    XXX
+           XXX      XXX       XXX     XXX     XXX     XX
+         XXX        XXX      XXX       XXX   XXX       X
+                    XXX      XXX                       X
+                    XXX     XXX                         
+                   XXX      XXX                         
+                  XXX       XXX                         
+                             XXX                       X
+                             XXX                       X
+                             XXX                       X
+                            XXX                         
+                            XXX                         
+                           XXX"
+large-screen-text="
                   XXX                 XXX     XXX                 XXX
                 XXX XXX             XXX XXX XXX XXX             XXX XXX
                XXX   XXX          XXX             XXX          XXX   XXX
@@ -53,7 +74,7 @@ XXX           XXX  XXX  XXX         XXX   XXX   XXX         XXX  XXX  XXX       
                              XXX                       XXX  
                             XXX                         XXX 
                             XXX                         XXX 
-                           XXX                           XXX</pre></div>
+                           XXX                           XXX"><pre id="ascii-art"></pre></div>
         <div class="ascii-art"><a href="https://www.instagram.com/ozanbayiz/"><pre id="ascii-art">
  XXX XXX    XXX XXX        XXX      XXX XXX
 XXX   XXX        XXX     XXX XXX    XXX   XXX
@@ -70,12 +91,16 @@ XXX   XXX   XXX   XXX    XXX XXX       XXX         XXX
 XXX   XXX   XXX   XXX      XXX         XXX       XXX
 XXX   XXX   XXX   XXX      XXX         XXX      XXX
  XXX XXX    XXX   XXX      XXX       XXX XXX     XXX XXX
-</pre></a></div></div>
+</a></pre></div>
+</div>
     <div class="header-line"></div>
     <p></p>
     <nav>
-        <a href="proj1.html">project1: Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection</a>
+        <a href="proj1.html" class="project-name"
+        small-screen-text="project1: Images of the Russian Empire"
+        large-screen-text="project1: Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection"
+        >project1: Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection</a>
     </nav>
-
+    <script src="main.js"></script>
 </body>
 </html>
