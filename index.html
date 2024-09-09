@@ -9,8 +9,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <script>
+        function adjustFontSize() {
+            const ascii_art = document.getElementById("ascii_art");
+            if (window.innerWidth <= 800) {
+                ascii_art.fontSize = `8px`;
+            } else {
+                ascii_art.fontSize = `12px`;
+            }
+        }
+        adjustFontSize();
+        window.addEventListener("resize", adjustFontSize);
+    </script>
     <div class="ascii-art-container">
-        <div class="ascii-art"><pre>
+        <div class="ascii-art"><pre id="ascii-art">
                   XXX                 XXX     XXX                 XXX
                 XXX XXX             XXX XXX XXX XXX             XXX XXX
                XXX   XXX          XXX             XXX          XXX   XXX
@@ -42,7 +54,7 @@ XXX           XXX  XXX  XXX         XXX   XXX   XXX         XXX  XXX  XXX       
                             XXX                         XXX 
                             XXX                         XXX 
                            XXX                           XXX</pre></div>
-        <div class="ascii-art"><a href="https://www.instagram.com/ozanbayiz/"><pre>
+        <div class="ascii-art"><a href="https://www.instagram.com/ozanbayiz/"><pre id="ascii-art">
  XXX XXX    XXX XXX        XXX      XXX XXX
 XXX   XXX        XXX     XXX XXX    XXX   XXX
 XXX   XXX       XXX     XXX   XXX   XXX   XXX
@@ -58,7 +70,6 @@ XXX   XXX   XXX   XXX    XXX XXX       XXX         XXX
 XXX   XXX   XXX   XXX      XXX         XXX       XXX
 XXX   XXX   XXX   XXX      XXX         XXX      XXX
  XXX XXX    XXX   XXX      XXX       XXX XXX     XXX XXX
-
 </pre></a></div></div>
     <div class="header-line"></div>
     <p></p>
