@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ozanbayiz CS180</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .img-text-container {
+            display: flex;                  /* Enable flexbox layout */
+            justify-content: space-between; /* Space items out */
+            /* align-items: center;             */
+            padding: 2vw;                  
+            /* border: 1px solid #ccc;          */
+        }
+        /* Text styles */
+        .text {
+            flex: 1;                        /* Allow text to take available space */
+            margin-right: 1vw;             /* Space between text and image */
+        }
+        .img {
+            max-width: 50%;
+            height: auto;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Flexible column layout */
+            gap: 10px; /* Gap between the images */
+            padding: 10px;
+        }
+
+        /* Style for the individual images */
+        .image-grid img {
+            width: 100%;    /* Make each image fill its grid cell */
+            height: auto;   /* Maintain aspect ratio */
+            border: 1px solid #ccc;  /* Optional border around images */
+        }
+    </style>
+
+</head>
+<body> 
+    <nav><a href="index.html">
+        back
+    </a></nav>
+    <h1>project 1</h1>
+    <h2>
+        Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection
+    </h2>
+    <div class="image-container", style="flex-direction: column;">
+        <img src="./assets/proj1/wide_emir.png" alt="Wide Emir">
+    </div>
+    <div class="header-line"></div>
+    <p>
+        did some research online. turns out <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a> is pretty good at aligning images:
+    </p>
+    <div class="image-container", style="flex-direction: column;">
+        <img src="./assets/proj1/lady_channels_raw.png" alt="Lady Raw Channels">
+        <p>↓ ↓ ↓ ↓</p>
+        <img src="./assets/proj1/phase_correlation_code.png", style= "max-width: 800px">
+        <p>↓ ↓ ↓ ↓</p>
+        <img src="./assets/proj1/lady_channels_shifted.png" alt="Lady SHifted Channels">
+    </div>
+    <p>
+        shoutout fft. done? but I still had to implement the image pyramid
+    </p>
+    <div class="header-line"></div>
+    <div class="img-text-container">
+        <!-- Left side: Text -->
+        <div class="text">
+            <p>
+                I divided the height/width of the image by decreasing powers of 2 for each level.
+                Each iteration would displace the query image 1 px up, down, left, and right, 
+                then pick the shift which yielded the highest metric.
+            </p>
+            <p>
+                Getting the metric involved:
+                <ul>
+                    <li>applying the shift with np.roll</li>
+                    <li>cropping the image to the inner 0.8*W x 0.8*H px since the border was interfering with the metrics</li>
+                    <li>applying the metric function</li>
+                </ul>
+            </p>
+            <p>
+                At first I tried MSE & NCC; flop. girl whatever I went back online. 
+                I found the <a href="https://en.wikipedia.org/wiki/Structural_similarity_index_measure">Strutural Similarity Index Measure</a>
+                <a href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html">(and its scikit-image documentation)</a>,
+                which gave me pretty good results.
+            </p>
+            <img src="./assets/proj1/pyramid_code.png">
+            <p style="text-align: right;"> ^(this was the code that generated that plot)-></p>
+            <p>
+                This worked fine (~15sec/TIF). 
+                Still lot slower than the phase correlation approach, so the results I'll show are from phase correlation.
+            </p>
+            <img src="./assets/proj1/blank_space_filler.png">
+            <p style="font-size: 0.6em; text-align: center;">(unrelated, a gift my friend got me)</p>
+        </div>
+        <div class="img">
+            <img src="./assets/proj1/onion_church_pyramid.png">
+        </div>
+    </div>
+    <div> 
+
+    </div>
+    <div class="header-line"></div>
+    <p> here are all the images:</p>
+    <div class="image-grid">
+        <img src="../proj1/results_pyramid/harvesters.tif">
+    </div>
+
+
+</body>
+</HTML>
