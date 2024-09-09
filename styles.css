@@ -97,7 +97,7 @@ img {
     color: violet;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 600px) {
     .ascii-art-container {
         flex-direction: column;
         justify-content: center;
