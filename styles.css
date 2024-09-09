@@ -1,4 +1,4 @@
-/* General styles for the website */
+
 body {
     font-family: 'JetBrains Mono', monospace;
     background-color: black;
@@ -19,6 +19,14 @@ h1 {
 h2 {
     font-size: 1.25em;
     font-style: italic;
+}
+h2 a {
+    color: white;
+    text-decoration: none;
+}
+h2 a:hover {
+    color: violet;
+    text-decoration: underline;
 }
 
 .header-line {
@@ -52,12 +60,11 @@ img {
     height: auto;      /* Maintain the aspect ratio of the image */
 }
 
-/* Optionally, set a container size to demonstrate resizing */
 .image-container {
-    width: 80%;        /* The image will resize to fit 80% of the container width */
-    margin: 0 auto;    /* Center the container */
+    width: 80%;
+    margin: 0 auto;
     align-items: center;
-    justify-items: center;
+    display: flex;
 }
 
 
@@ -69,26 +76,26 @@ img {
     align-items: center;
     flex-wrap: wrap;
 }
-/* Style for the ASCII art block */
+
 .ascii-art {
-    white-space: pre;            /* Preserve whitespace formatting */
-    font-family: monospace;      /* Monospaced font for ASCII art */
+    white-space: pre;
+    font-family: monospace;
     margin: 0 20px;
 }
-/* Style for the link to look more like plain text (optional) */
+
 .ascii-art a {
-    text-decoration: none;       /* Remove underline from link */
-    color: inherit;              /* Inherit the text color */
+    text-decoration: none;
+    color: inherit;
 }
-/* Change the link color on hover */
+
 .ascii-art a:hover {
-    color: violet;                 /* Optional hover effect for the link */
+    color: violet;
 }
-/* Media query: When the viewport is too narrow, stack the ASCII art vertically */
+
 @media (max-width: 600px) {
     .ascii-art-container {
-        flex-direction: column;  /* Stack the ASCII art vertically */
-        align-items: center;     /* Center them horizontally */
+        flex-direction: column;
+        align-items: center;
         gap: 0;
     }
 
