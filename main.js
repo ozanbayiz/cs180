@@ -1,18 +1,18 @@
-function resizeSpider() {
-    const textContent = document.getElementById('ascii-spider');
-    const smallScreenText = textContent.getAttribute('small-screen-text');
-    const largeScreenText = textContent.getAttribute('large-screen-text');
+// function resizeSpider() {
+//     const textContent = document.getElementById('ascii-spider');
+//     const smallScreenText = textContent.getAttribute('small-screen-text');
+//     const largeScreenText = textContent.getAttribute('large-screen-text');
     
-    // Set the text based on the window size
-    if (window.innerWidth < 880) {
-        textContent.textContent = smallScreenText;
-    } else {
-        textContent.textContent = largeScreenText;
-    }
-}
-// Automatically adjust text based on window size
-window.addEventListener('resize', resizeSpider);
-window.addEventListener('load', resizeSpider);
+//     // Set the text based on the window size
+//     if (window.innerWidth < 880) {
+//         textContent.textContent = smallScreenText;
+//     } else {
+//         textContent.textContent = largeScreenText;
+//     }
+// }
+// // Automatically adjust text based on window size
+// window.addEventListener('resize', resizeSpider);
+// window.addEventListener('load', resizeSpider);
 
 function adjustTextContent() {
     // Get all elements with the class 'ascii-art'

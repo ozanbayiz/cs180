@@ -23,8 +23,12 @@
         .img-text-container .img{
             max-width: 50%;
             height: auto;
+            margin-right: 5vw;
         }
-        @media (max-width: 880px) {
+        @media (max-width: 600px) {
+        p {
+            font-size: 0.8em;
+        }
         .img-text-container {
             flex-direction: column;
             align-items: center;
@@ -69,11 +73,6 @@
             font-size: 0.8em;
             margin: 0;
         }
-        .image-grid sub {
-            width: 100%;    /* Make each image fill its grid cell */
-            height: auto;   /* Maintain aspect ratio */
-            border: 1px solid #ccc;  /* Optional border around images */
-        }
     </style>
 
 </head>
@@ -86,7 +85,7 @@
         Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection
     </h2>
     <div class="image-container", style="flex-direction: column;">
-        <img src="./assets/proj1/wide_emir.png" alt="Wide Emir">
+        <img src="./assets/proj1/wide_emir.png" style="width: min(1000px, 100%);" alt="Wide Emir">
     </div>
     <div class="header-line"></div>
     <p>

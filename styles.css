@@ -65,7 +65,7 @@ img {
 }
 
 .image-container {
-    width: 80%;
+    width: min(100%, 1000px);
     margin: 0 auto;
     align-items: center;
     display: flex;
@@ -79,13 +79,12 @@ img {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    font-size: min(10vw, 1em);
 }
 
 .ascii-art {
     white-space: pre;
     font-family: monospace;
-    margin: 0 20px;
+    margin: 0 2vw;
 }
 
 .ascii-art a {
