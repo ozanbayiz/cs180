@@ -18,7 +18,7 @@
         }
         .img-text-container .text {
             flex: 1;                        /* Allow text to take available space */
-            margin-right: 1vw;             /* Space between text and image */
+            margin-left: 1vw;             /* Space between text and image */
         }
         .img-text-container .img{
             max-width: 50%;
@@ -104,7 +104,9 @@
     </p>
     <div class="header-line"></div>
     <div class="img-text-container">
-        <!-- Left side: Text -->
+        <div class="img">
+            <img src="./assets/proj1/onion_church_pyramid.png">
+        </div>
         <div class="text">
             <p>
                 I divided the height/width of the image by decreasing powers of 2 for each level.
@@ -126,16 +128,13 @@
                 which gave me pretty good results.
             </p>
             <img src="./assets/proj1/pyramid_code.png">
-            <p style="text-align: right;"> ^(this was the code that generated that plot)-></p>
+
             <p>
                 This worked fine (~15sec/TIF). 
                 Still lot slower than the phase correlation approach, so the results I'll show are from phase correlation.
             </p>
             <img src="./assets/proj1/blank_space_filler.png">
             <p style="font-size: 0.6em; text-align: center;">(unrelated, a gift my friend got me)</p>
-        </div>
-        <div class="img">
-            <img src="./assets/proj1/onion_church_pyramid.png">
         </div>
     </div>
     <div> 
