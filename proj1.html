@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ozanbayiz CS180</title>
+    <title>proj1</title>
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./assets/proj1/wide_emir.png">
 
     <style>
         .img-text-container {
@@ -82,14 +83,16 @@
     <div class="header-line"></div>
     <p>
         The first thing I did was search for metrics for image alignment that are invariant to difference in brightness levels between channels. 
-        CS 170 gave me some insights into the wide applications of working in the frequency domain. This got me thinking about a sentent on the website mentioning how 
-        <i style="color: lightcoral">"you might have to use a cleverer metric, or different features than the raw pixels".</i>
+        CS 170 gave me some insights into the wide applications of working in the frequency domain. This got me thinking about a sentence on the website mentioning how 
+        <i style="color: lightcoral">"you might have to use a cleverer metric, or different features than the raw pixels."</i>
     </p>
     <p>
         Ok..
     </p>
     <p>
-        I stumbled on <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a>, which seems pretty good:
+        I stumbled on <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a>. 
+        Turns out that the maximum index (i,j) of the phase correlation matrix corresponds to the best shift. 
+        Implemented it and tried it out:
     </p>
     <div class="image-container", style="flex-direction: column;">
         <img src="./assets/proj1/lady_channels_raw.png" alt="Lady Raw Channels">
@@ -99,7 +102,7 @@
         <img src="./assets/proj1/lady_channels_shifted.png" alt="Lady Shifted Channels">
     </div>
     <p>
-        the output of
+        sweet. done? But I still had to implement the image pyramid.
     </p>
     <div class="header-line"></div>
     <p>ok fine</p>
