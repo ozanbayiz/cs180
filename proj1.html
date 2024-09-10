@@ -81,7 +81,15 @@
     </div>
     <div class="header-line"></div>
     <p>
-        did some research online. turns out <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a> is pretty good at aligning images:
+        The first thing I did was search for metrics for image alignment that are invariant to difference in brightness levels between channels. 
+        CS 170 gave me some insights into the wide applications of working in the frequency domain. This got me thinking about a sentent on the website mentioning how 
+        <i style="color: lightcoral">"you might have to use a cleverer metric, or different features than the raw pixels".</i>
+    </p>
+    <p>
+        Ok..
+    </p>
+    <p>
+        I stumbled on <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a>, which seems pretty good:
     </p>
     <div class="image-container", style="flex-direction: column;">
         <img src="./assets/proj1/lady_channels_raw.png" alt="Lady Raw Channels">
@@ -91,7 +99,7 @@
         <img src="./assets/proj1/lady_channels_shifted.png" alt="Lady Shifted Channels">
     </div>
     <p>
-        shoutout fft. done? but I still had to implement the image pyramid
+        the output of
     </p>
     <div class="header-line"></div>
     <p>ok fine</p>
@@ -109,21 +117,22 @@
                 Getting the metric involved:
                 <ul>
                     <li>applying the shift with np.roll</li>
-                    <li>cropping the image to the inner 0.8*W x 0.8*H px since the border was interfering with the metrics</li>
+                    <li>cropping the image to the inner 0.8*W x 0.8*H px, since the border was interfering with the metric function's results</li>
                     <li>applying the metric function</li>
                 </ul>
             </p>
             <p>
-                At first I tried MSE & NCC; flop. girl whatever I went back online. 
-                I found the <a href="https://en.wikipedia.org/wiki/Structural_similarity_index_measure">Structural Similarity Index Measure</a>
-                <a href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html">(and its scikit-image documentation)</a>,
+                At first I tried MSE & NCC as metric functions. These didn't work so I went back online and found NGD, which also didn't really work (but maybe I was just being impatient).
+                Eventually I found the <a href="https://en.wikipedia.org/wiki/Structural_similarity_index_measure">Structural Similarity Index Measure</a>
+                <a style="color: rgb(0, 234, 255)" href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html">(and its scikit-image documentation)</a>,
                 which gave me pretty good results.
             </p>
             <img src="./assets/proj1/pyramid_code.png">
 
             <p>
                 This worked fine (~15sec/TIF). 
-                Still lot slower than the phase correlation approach, so the results I'll show are from phase correlation.
+                Still lot slower than the phase correlation approach. 
+                I'm not super patient so the result images are those I got using phase correlation.
             </p>
             <img src="./assets/proj1/blank_space_filler.png">
             <p style="font-size: 0.6em; text-align: center;">(unrelated, a gift my friend got me)</p>
