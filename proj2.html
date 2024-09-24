@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html land="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>proj2</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+    </head>
+    <body> 
+        <nav><a href="index.html"> back </a></nav>
+
+        <h1> project 2 </h1>
+
+        <h2> Fun with Filters and Frequencies! </h2>
+        <div class="image-container">
+            <img src="./assets/proj2/misc/header.png">
+        </div>
+        <br>
+        <div class="header-line"></div>
+
+        <h2> Part 1: "Fun" with Filters </h2>
+
+        <h3> 1.1 Finite Difference Operator </h3>
+        <p>
+            To calculate the gradient magnitude, I convolved the base image with derivative filters, 
+            stacked the two convolved layers, and took the norm of the resultant vector.
+        </p>
+        <div class="img-text-container">
+            <div class="text-container">
+                <p>
+                    \[im_{D_x}  = im * D_x\]
+                    \[im_{D_y} = im*D_y\]
+                    \[ (im_D)_{ij} = \left\lVert\begin{bmatrix} (im_{D_x})_{ij} \\ (im_{D_y})_{ij} \end{bmatrix} \right\rVert _2^2 \]        
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="./assets/proj2/figures/camerman_raw_edges.png", style="max-height: 400px;">
+            </div>
+        </div>
+        <p>
+
+            To find the threshold I plotted the histogram of pixel intensity levels and found that most of them were below 0.1. 
+            I found 0.14 to be the best threshold
+        </p>
+
+        <div class="image-container">
+            <img src="./assets/proj2/figures/hist_and_edges.png">
+        </div>
+        <br>
+
+        <h3> 1.2 Derivative of Gaussian </h3>
+        <p>
+            I created a gaussian kernel using <code>cv2.GetGaussianKernel()</code>.
+        </p>
+
+        <div class="image-container">
+            <img src="./assets/proj2/figures/blurred_cameraman.png">
+        </div>
+
+        <p>
+            After blurring, I noticed the gradient magnitude matrix was much less noisy, and that the edges were better defined.
+            Cool.
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj2/figures/blurred_hist_and_edges.png">
+        </div>
+        <p>
+            Then I created the DoG Filters.
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj2/figures/DoG_filters.png">
+        </div>
+        <p>
+            I got almost the same result, but noticed that the DoG-convolved images had a little bit more texture.
+            I think that this may be due to zero-padding, but I'm not sure.
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj2/figures/DoG_hist_edges.png">
+        </div>
+
+        <br>
+
+        <div class="header-line"></div>
+
+        <h2> Part 2: "Fun" with Frequencies</h2>
+        
+        <h3> 2.1 Unsharp Masking </h3>
+        <p>
+            To create the high-pass filter, I took the gaussian Kernel, normalized it, and subtracted it from a unit impulse.
+            To create the unsharp-masking filter, I took this high-pass filter and added it back to the unit impulse.
+        </p>
+
+        <div class="image-container">
+            <img src="./assets/proj2/figures/hp_lp_um_filters.png">
+        </div>
+        <p>
+            Here is the Taj Mahal convolved with this unsharp masking filter
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj2/figures/taj_sharpened.png">
+        </div>
+        <p>
+            Here is my cat, de noot, after being sharpened, blurred, and sharpened again.
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj2/figures/noot_sharpening.png">
+        </div>
+        <br>
+
+        <h3> 2.2 Hybrid Images </h3>
+        <p>
+            Prof. Efros once mentioned in lecture that his efforts to grow berries were undermined by a hummingbird which which was able to identify all the ripe berries.
+            I present to you:
+        </p>
+        <div class = "image-grid"> 
+            <div>
+                <h2>
+                    efrostrawberry
+                </h2>
+                <img src="./assets/proj2/hybrids/efrostrawberry.png" style="max-height: 60vh">
+            </div>
+            <div>
+                <h2>
+                    hummingfros
+                </h2>
+                <img src="./assets/proj2/hybrids/hummingfros.png", style="max-height: 60vh">
+            </div>
+            <div>
+                <h2>
+                    strawbird
+                </h2>
+                <img src="./assets/proj2/hybrids/strawbird.png", style="max-height: 60vh">
+            </div>
+        </div>
+        <br>
+        <p>
+           My steps to separate an image into high and low frequencies were to:
+           <ul>
+                <li>convert the image into frequencies with <code>np.fft.fft2()</code></li>
+                <li>apply a gaussian mask to the frequency spectrum to get the low frequencies</li>
+                <li>subtract the low frequencies from the frequency spectrum to get the high frequencies</li>
+                <li>convert the high and low frequency ranges into back into images using <code>np.fft.ifft2()</code></li>
+           </ul>
+        </p>
+        <div class="img-text-container">
+            <div class="text-container">
+                <p>
+                    Here's an example of the frequency spectra for Prof. Efros, Efros' low frequencies, a strawberry, and its high frequencies. 
+                    (this was a sneaky requirement btw)
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="./assets/proj2/figures/efrostrawberry_spectra.png">
+            </div>
+        </div>
+
+        <p>
+            of course, it was not always so simple. here's a flop 
+            (i forgot to pick 
+                \( \alpha \in [0,1] \) 
+            for blending)
+        </p>
+
+        <div class="image-container">
+            <img src="./assets/proj2/hybrids/efrostrawberry_flop.png", style="max-height: 400px">
+        </div>
+
+        <br>
+
+        <h3> 2.3 Gaussian and Laplacian Stacks </h3>
+        <div class="img-text-container">
+            <div class="text-container">
+                <p>
+                    my intuition: at each level of the stack, we only want a subset of the frequencies.
+                    this could be done by converting the image into frequencies,
+                    isolating the desired frequencies through some kind of mask,
+                    then converting those isolated frequencies back into an image.
+                </p>
+                <p>
+                    At first I created ring masks with 
+                        \(r_{i1} = 2^i, r_{i2}=2^{i-1}\), \( \forall i \in \{0, 1, ..., \log_2(\min(h,w)) \} \).
+                    This way I could isolate each octave band of frequencies, 
+                        and convert these bands to images directly get the Laplacian stack.
+                    It did not really work.
+                </p>
+                <img src="./assets/proj2/figures/ring_mask.png">
+                <p>
+                    Then I created circle masks with 
+                        \(r_i = 2^i\), \( \forall i \in \{0, 1, ..., \log_2(\min(h,w)) \} \). 
+                    This way I could isolate each group of frequencies, 
+                        and convert these bands to images directly get the gaussian stack stack.
+                    It did not really work.
+                </p>
+                <img src="./assets/proj2/figures/circle_mask.png">
+                <p>
+                    I thought it was all getting too complicated. 
+                    I created a series of Gaussian masks with \(\sigma_i = \min(h,w) \times 2^{-i}\). 
+                    Each gaussian was then scaled so that the maximum value was 1. 
+                    This seemed to work fine. 
+                </p>
+                <img src="./assets/proj2/figures/gauss_mask.png">
+                <p>
+                    To get the Laplacian stack, 
+                        I took the difference of every two adjacent levels of the Gaussian stack, 
+                        then appended the last layer of the Gaussian stack.
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="./assets/proj2/figures/apple_orange_gl_stacks.png"  style="max-height: 1000px;">
+            </div>
+        </div>
+
+        <br>
+        <h3> 2.4 Multiresolution Blending </h3>
+        <div class="img-text-container">
+            <div class="text-container">
+                <p>
+                    After abstracting away the process to get the Gaussian and Laplacian pyramids, 
+                    all I had to do was:
+                </p>
+                <ul>
+                    <li>Get the Laplacian stack for both images, \( L_{im_1}, L_{im_2}\)</li>
+                    <li>Create a mask for the blending</li>
+                    <li>Get the Gaussian stack for the mask, \(G_m\)</li>
+                    <li>Iteratively compute:
+                        \[im_{blended} = \sum_{i=0}^{n} (L_{im_1})_i \times (G_m)_i + (L_{im_2})_i \times (1-(G_m)_i) \]</li>
+                </ul>
+                <p>
+                    chillllllll
+                </p>
+                <div class="image-container">
+                    <div>
+                        <h2> Le Oraple ... . .. . .. .</h2>
+                        <img src="./assets/proj2/blends/oraple.png", style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            
+            </div>
+            <div class="image-container">
+                <img src="./assets/proj2/figures/apple_orange_masking.png" style="max-height: 1000px;"">
+            </div>
+        </div>
+
+        <br>
+
+        here are my other images:
+
+        <br>
+
+        <div class="image-container">
+            <div>
+                <h2>Noot with Hat</h2>
+                <img src="./assets/proj2/blends/noot_with_hat.png">
+            </div>
+            <div>
+                <h2>haha</h2>
+                <img src="./assets/proj2/blends/ozan_lecture.png">
+            </div>
+        </div>
+    </body>
+</html>
