@@ -1,0 +1,144 @@
+<DOCTYPE html>
+<html>
+    <head>
+        <title>proj3</title>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+
+        <!-- <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script> -->
+
+    </head>
+    <body>
+    <div class="content-wrapper">
+        <aside class="index">
+            <nav style="text-align: center;"><a href="index.html">back</a></nav>
+            <br>
+            <div class="header-line"></div>
+            <ol>
+                <li><a href="#part-1">Defining Correspondences</a></li>
+                <li><a href="#part-2">Computing the "Mid-way Face"</a></li>
+                <li><a href="#part-3">The Morph Sequence</a></li>
+                <li><a href="#part-4">The "Mean face" of a population</a></li>
+                <li><a href="#part-5">Caricatures: Extrapolating from the mean</a></li>
+            </ol>
+        </aside>
+
+        <main>
+        <h1> project 3 </h1>
+
+        <h2> Face Morphing </h2>
+        <div class="image-container">
+            <img src="./assets/proj3/failed_attempt.png", style="max-height: 400px;">
+        </div>
+        <br>
+        <div class="header-line"></div>
+        <h2 id="part-1"> Part 1: Defining Correspondences </h2>
+        <p>
+            I did not really want to manually label correspondences. 
+            After doing some research, I found dlib's 
+            <code>shape_predictor_68_face_landmarks.dat</code> 
+            which is a face landmark detector that labels 68 points on the face.
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj3/face_landmarks.png", style="max-height: 400px;">
+        </div>
+        <p>
+            I was able to define correspondencess pretty easily,
+            since landmarks were consistent between faces.
+        I noticed, however that the landmarks did not cover the entire face.
+        To get around this, I added 8 additional landmarks:
+            the 4 corners of the image and the midpoints of the 4 edges.
+        </p>
+        <p>
+            I computed the midpoints between corresponding landmarks, and created the triangulation using
+            <code>scipy.spatial.Delauney</code> (shoutout scipy as usual), which gave me the following:
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj3/efros_stoica_triangulations.png", style="max-height: 400px;">
+        </div>
+
+        <br>
+
+        <div class="header-line"></div>
+
+        <h2 id="part-2"> Part 2: Computing the "Mid-way Face"</h2>
+        <p>
+            I represented each triangle composed of points \({(x_1, y_1), (x_2, y_2), (x_3, y_3)}\) as a 3 x 3 matrix:
+            \[
+            \begin{bmatrix}
+            x_1 & x_2 & x_3 \\
+            y_1 & y_2 & y_3 \\
+            1 & 1 & 1
+            \end{bmatrix}
+            \]
+
+            the goal was to find a transformation matrix \(T\) such that:
+
+            \[t_d = T t_s \]
+            \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = T\begin{bmatrix} x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\  1 & 1 & 1 \end{bmatrix} \]
+
+            so I let
+            \[ T = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \begin{bmatrix}x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\ 1 & 1 & 1\end{bmatrix}^{-1}\]
+
+            which yielded
+            \[t_d = T t_s\]
+            \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = \left( \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \begin{bmatrix}x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\ 1 & 1 & 1\end{bmatrix}^{-1} \right) \begin{bmatrix} x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\  1 & 1 & 1 \end{bmatrix} \]
+            \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \left( \begin{bmatrix}x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\ 1 & 1 & 1\end{bmatrix}^{-1} \begin{bmatrix} x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\  1 & 1 & 1 \end{bmatrix} \right) \]
+            \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix}  I \]
+            \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \]
+            \[ t_d = t_d \]
+            as desired.
+        </p>
+        <p>
+            This gave me an efficient way to get the affine transformation between corresponding triangles.
+            By getting the inverse transformation for each triangle, I was able to compute the pixel in the source image correspoinding to each pixel in the destination image. 
+            To get the color for each pixel, I interpolated from the source image by using <code>scipy.interpolate.RectBivariateSpline</code>.
+        </p>
+
+        <p>
+            Here was the result I got from warping both images to the midpoint landmarks and performing a simple linear interpolation:
+        </p>
+        <div class="image-container">
+            <img src="./assets/proj3/efros_stoica_midface.png", style="max-height: 400px;">
+        </div>
+
+        <br>
+
+        <div class="header-line"></div>
+        <h2 id="part-3"> Part 3: The Morph Sequence</h2>
+        <div class="image-container">
+            <img src="./assets/proj3/morph_sequence.gif", style="max-height: 400px;">
+        </div>
+
+        <br>
+
+        <div class="header-line"></div>
+        <h2 id="part-4"> Part 4: The "Mean face" of a population</h2>
+
+        <p>
+            As my population, I used two sets of manually aligned frontal images from the FEI Face Database.
+        </p>
+
+        <div class="image-grid">
+            <img src="./assets/proj3/fei_face_raw.png">
+            <img src="./assets/proj3/fei_face_tri.png">
+            <img src="./assets/proj3/fei_face_morphed.png">
+        </div>
+
+        <div class="image-grid">
+            <img src="./assets/proj3/fei_face_mean.png">
+            <img src="./assets/proj3/ozan.png">
+            <img src="./assets/proj3/fei_mean_morphed.png">
+            <img src="./assets/proj3/ozan_morphed.png">
+        </div>
+
+        <div class="header-line"></div>
+        <h2 id="part-5"> Part 5: Caricatures: Extrapolating from the mean</h2>
+        </main>
+    </div>
+    </body>
+</html>
+</DOCTYPE>
