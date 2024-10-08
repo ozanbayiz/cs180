@@ -4,6 +4,7 @@
         <title>proj3</title>
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles2.css">
+        <link rel="icon" href="./assets/proj3/ozan_ascended.png">
 
         <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script type="text/javascript" id="MathJax-script" async
@@ -25,6 +26,7 @@
                     <li><a href="#part-3">The Morph Sequence</a></li>
                     <li><a href="#part-4">The "Mean face" of a population</a></li>
                     <li><a href="#part-5">Caricatures: Extrapolating from the mean</a></li>
+                    <li><a href="#part-6">Bells and Whistles</a></li>
                 </ol>
             </div>
         </div>
@@ -49,9 +51,9 @@
                 <img src="./assets/proj3/face_landmarks.png", style="max-height: 400px;">
             </div>
             <p>
-                I was able to define correspondencess pretty easily,
-                since landmarks were consistent between faces.
-            I noticed, however that the landmarks did not cover the entire face.
+                I was able to define correspondencess pretty easily
+                since landmarks are consistent between faces.
+            I noticed, however, that the landmarks did not cover the entire face.
             To get around this, I added 8 additional landmarks:
                 the 4 corners of the image and the midpoints of the 4 edges.
             </p>
@@ -115,7 +117,6 @@
             <div class="image-container">
                 <img src="./assets/proj3/morph_sequence.gif", style="max-height: 400px;">
             </div>
-
             <br>
 
             <div class="header-line"></div>
@@ -140,6 +141,36 @@
 
             <div class="header-line"></div>
             <h2 id="part-5"> Part 5: Caricatures: Extrapolating from the mean</h2>
+
+            <p>
+                Using the mean landmarks of the FEI Dataset, I extrapolated a new set of landmarks:
+                1.8 * (My Landmarks) - 0.8 * (Mean Landmarks).
+            </p>
+            <p>
+                Here is the result of warping my face to these extrapolated landmarks:
+            </p>
+            <div class="image-container">
+                <img src="./assets/proj3/caricature.png">
+            </div>
+            <p>
+            </p>
+            <br>
+
+            <div class="header-line"></div>
+            <h2 id="part-6"> Part 6: Bells and Whistles</h2>
+            <p>
+                I am Turkish. But could I look more Turkish? I wanted to see what it would look like if I morphed myself to the average Turkish man and woman.
+            </p>
+            <div class="image-container">
+                <img src="./assets/proj3/ozan_average_turk.png">
+            </div>
+            <p>
+                I noticed my jaw tends to get distorted when I morph my face, so I tried it again, this time morphing the average faces to me.
+            </p>
+            <div class="image-grid">
+                <img src="./assets/proj3/turks_morphed_to_ozan.png">
+                <img src="./assets/proj3/ozan_cross_dissolved_with_turks.png">
+            </div>
         </div>
     </div>
     <script>
@@ -164,7 +195,7 @@
                 main.style.marginLeft = " 55px";
             } else {
                 toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px"; // Corrected to 250px
+                main.style.marginLeft = "250px";
             }
         }
     }
