@@ -47,9 +47,6 @@ code {
 
 .header-line {
     border-bottom: 3px dashed white;
-    margin-left: -20px; /* Negative margin to counteract main's padding */
-    margin-right: -20px; /* Extend to the right edge as well */
-    width: calc(100% + 40px); /* Ensure full width accounting for negative margins */
 }
 
 nav a {
@@ -179,96 +176,4 @@ img {
         max-width: 100%;
         max-height: auto;
     }
-}
-
-
-
-/* ================================================================ */
-
-/* INDEX */
-
-.content-wrapper {
-    display: flex;
-    transition: margin-left 0.3s ease-in-out;
-}
-
-
-.index {
-    width: 200px;
-    padding: 20px;
-    background-color: #000;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: auto;
-    border-right: 3px dashed white; 
-}
-
-.index h3 {
-    margin-top: 0;
-}
-
-.index ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.index li {
-    margin-bottom: 10px;
-}
-
-.index a {
-    color: white;
-    text-decoration: none;
-}
-
-.index a:hover {
-    color: violet;
-    text-decoration: underline;
-}
-
-main {
-    margin-left: 220px; 
-    padding-left: 20px; 
-}
-
-@media (max-width: 768px) {
-    .index {
-        display: none;
-    }
-
-    main {
-        margin-left: 0;
-    }
-    .header-line {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-}
-.toggle-index {
-    position: fixed;
-    left: 0;
-    top: 5%;
-    transform: translateY(-50%);
-    z-index: 1000;
-    background: none;
-    border: none;
-    font-size: 1em;
-    cursor: pointer;
-    color: white;
-    margin-left: 10px;
-}
-
-.toggle-index:hover {
-    color: violet;
-}
-
-.index {
-    transition: display 0.3s ease-in-out;
-}
-
-.index-hidden {
-    display: none;
 }

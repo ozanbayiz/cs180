@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
-    <html lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>proj1</title>
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
     <link rel="icon" href="./assets/proj1/wide_emir.png">
 
     <style>
@@ -67,172 +67,246 @@
             margin: 0;
         }
     </style>
-
 </head>
 <body> 
-    <nav><a href="index.html">
-        back
-    </a></nav>
-    <h1>project 1</h1>
-    <h2>
-        Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection
-    </h2>
-    <div class="image-container", style="flex-direction: column;">
-        <img src="./assets/proj1/wide_emir.png" style="width: min(1000px, 100%);" alt="Wide Emir">
+    <div class="content-wrapper">
+        <div id="mySidebar" class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="back-link">back</a>
+                <div class="toggle-btn" onclick="toggleNav()">&gt;&gt;&gt;</div>
+            </div>
+            <div class="header-line"></div>
+            <div class="sidebar-content">
+                <ol>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#phase-correlation">Phase Correlation</a></li>
+                    <li><a href="#image-pyramid">Image Pyramid</a></li>
+                    <li><a href="#results">Results</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="main">
+            <h1>project 1</h1>
+            <h2 id="introduction">
+                Images of the Russian Empire -- Colorizing the Prokudin-Gorskii Photo Collection
+            </h2>
+            <div class="image-container" style="flex-direction: column;">
+                <img src="./assets/proj1/wide_emir.png" style="width: min(1000px, 100%);" alt="Wide Emir">
+            </div>
+            
+            <p>
+                The first thing I did was search for metrics for image alignment that are invariant to difference in brightness levels between channels. 
+                CS 170 gave me some insights into the wide applications of working in the frequency domain. This got me thinking about a sentence on the website mentioning how 
+                <i style="color: lightcoral">"you might have to use a cleverer metric, or different features than the raw pixels."</i>
+            </p>
+            <p>
+                Ok..
+            </p>
+            <div class="header-line"></div>
+            <h2 id="phase-correlation">Phase Correlation</h2>
+            <p>
+                I stumbled on <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a>. 
+                Turns out that the maximum index (i,j) of the phase correlation matrix corresponds to the best shift. 
+                Implemented it and tried it out:
+            </p>
+            <div class="image-container" style="flex-direction: column;">
+                <img src="./assets/proj1/lady_channels_raw.png" alt="Lady Raw Channels">
+                <p style="text-align: center;">↓ ↓ ↓ ↓</p>
+                <img src="./assets/proj1/phase_correlation_code.png">
+                <p style="text-align: center;">↓ ↓ ↓ ↓</p>
+                <img src="./assets/proj1/lady_channels_shifted.png" alt="Lady Shifted Channels">
+            </div>
+            <p>
+                sweet. done? But I still had to implement the image pyramid.
+            </p>
+            <div class="header-line"></div>
+            <h2 id="image-pyramid">Image Pyramid</h3>
+            <div class="img-text-container">
+                <div class="img">
+                    <img src="./assets/proj1/onion_church_pyramid.png">
+                </div>
+                <div class="text">
+                    <p>
+                        At each level, I divided the height/width of the query image by a power of 2.
+                        Each iteration would displace the query image 1 px up, down, left, and right, 
+                        then pick the shift which yielded the highest metric.
+                    </p>
+                    <p>
+                        Getting the metric involved:
+                        <ul>
+                            <li>applying the shift with np.roll</li>
+                            <li>cropping the image to the inner 0.8*W x 0.8*H px, since the border was interfering with the metric function's results</li>
+                            <li>applying the metric function</li>
+                        </ul>
+                    </p>
+                    <p>
+                        At first I tried MSE & NCC as metric functions. These didn't work so I went back online and found NGD, which also didn't really work (but maybe I was just being impatient).
+                        Eventually I found the <a href="https://en.wikipedia.org/wiki/Structural_similarity_index_measure">Structural Similarity Index Measure</a>
+                        <a style="color: rgb(0, 234, 255)" href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html">(and its scikit-image documentation)</a>,
+                        which gave me pretty good results.
+                    </p>
+                    <img src="./assets/proj1/pyramid_code.png">
+
+                    <p>
+                        This worked fine (~15sec/TIF). 
+                        Still lot slower than the phase correlation approach. 
+                        I'm not super patient so the result images are those I got using phase correlation.
+                    </p>
+                </div>
+            </div>
+            <div class="header-line"></div>
+            <h2 id="results">Results</h2>
+            <p> here are all the images:</p>
+            <div class="image-grid">
+                <div>
+                    <b>cathethedral</b>
+                    <img src="./assets/proj1/results/cathedral.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>church</b>
+                    <img src="./assets/proj1/results/church.jpeg">
+                    <p>red shift: (58, 3630)</p>
+                    <p>green shift: (25, 3)</p>
+                </div>
+                <div>
+                    <b>emir</b>
+                    <img src="./assets/proj1/results/emir.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>harvesters</b>
+                    <img src="./assets/proj1/results/harvesters.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>icon</b>
+                    <img src="./assets/proj1/results/icon.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>lady</b>
+                    <img src="./assets/proj1/results/lady.jpeg">
+                    <p>red shift: (120, 13)</p>
+                    <p>green shift: (57, 9)</p>
+                </div>
+                <div>
+                    <b>melons</b>
+                    <img src="./assets/proj1/results/melons.jpeg">
+                    <p>red shift: (176, 14)</p>
+                    <p>green shift: (79, 8)</p>
+                </div>
+                <div>
+                    <b>monastery</b>
+                    <img src="./assets/proj1/results/monastery.jpeg">
+                    <p>red shift: (3, 2)</p>
+                    <p>green shift: (338, 2)</p>
+                </div>
+                <div>
+                    <b>onion church</b>
+                    <img src="./assets/proj1/results/onion_church.jpeg">
+                    <p>red shift: (107, 34)</p>
+                    <p>green shift: (51, 19)</p>
+                </div>
+                <div>
+                    <b>sculpture</b>
+                    <img src="./assets/proj1/results/sculpture.jpeg">
+                    <p>red shift: (140, 3773)</p>
+                    <p>green shift: (33, 3789)</p>
+                </div>
+                <div>
+                    <b>self portrait</b>
+                    <img src="./assets/proj1/results/self_portrait.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>3 generations</b>
+                    <img src="./assets/proj1/results/three_generations.jpeg">
+                    <p>red shift: (111, 7)</p>
+                    <p>green shift: (56, 12)</p>
+                </div>
+                <div>
+                    <b>tobolsk</b>
+                    <img src="./assets/proj1/results/tobolsk.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+                <div>
+                    <b>train</b>
+                    <img src="./assets/proj1/results/train.jpeg">
+                    <p>red shift: (106, 41)</p>
+                    <p>green shift: (49, 24)</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+    function toggleNav() {
+        var sidebar = document.getElementById("mySidebar");
+        var main = document.getElementById("main");
+        var toggleBtn = document.querySelector(".toggle-btn");
         
-    <p>
-        The first thing I did was search for metrics for image alignment that are invariant to difference in brightness levels between channels. 
-        CS 170 gave me some insights into the wide applications of working in the frequency domain. This got me thinking about a sentence on the website mentioning how 
-        <i style="color: lightcoral">"you might have to use a cleverer metric, or different features than the raw pixels."</i>
-    </p>
-    <p>
-        Ok..
-    </p>
-    <p>
-        I stumbled on <a href="https://sthoduka.github.io/imreg_fmt/docs/phase-correlation/">phase correlation</a>. 
-        Turns out that the maximum index (i,j) of the phase correlation matrix corresponds to the best shift. 
-        Implemented it and tried it out:
-    </p>
-    <div class="image-container", style="flex-direction: column;">
-        <img src="./assets/proj1/lady_channels_raw.png" alt="Lady Raw Channels">
-        <p style="text-align: center;"></pstyle>↓ ↓ ↓ ↓</p>
-        <img src="./assets/proj1/phase_correlation_code.png">
-        <p style="text-align: center;">↓ ↓ ↓ ↓</p>
-        <img src="./assets/proj1/lady_channels_shifted.png" alt="Lady Shifted Channels">
-    </div>
-    <p>
-        sweet. done? But I still had to implement the image pyramid.
-    </p>
-    <div class="header-line"></div>
-    <p>ok fine</p>
-    <div class="img-text-container">
-        <div class="img">
-            <img src="./assets/proj1/onion_church_pyramid.png">
-        </div>
-        <div class="text">
-            <p>
-                At each level, I divided the height/width of the query image by a power of 2.
-                Each iteration would displace the query image 1 px up, down, left, and right, 
-                then pick the shift which yielded the highest metric.
-            </p>
-            <p>
-                Getting the metric involved:
-                <ul>
-                    <li>applying the shift with np.roll</li>
-                    <li>cropping the image to the inner 0.8*W x 0.8*H px, since the border was interfering with the metric function's results</li>
-                    <li>applying the metric function</li>
-                </ul>
-            </p>
-            <p>
-                At first I tried MSE & NCC as metric functions. These didn't work so I went back online and found NGD, which also didn't really work (but maybe I was just being impatient).
-                Eventually I found the <a href="https://en.wikipedia.org/wiki/Structural_similarity_index_measure">Structural Similarity Index Measure</a>
-                <a style="color: rgb(0, 234, 255)" href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html">(and its scikit-image documentation)</a>,
-                which gave me pretty good results.
-            </p>
-            <img src="./assets/proj1/pyramid_code.png">
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle("sidebar-expanded");
+            if (sidebar.classList.contains("sidebar-expanded")) {
+                toggleBtn.innerHTML = "&lt;&lt;&lt;";
+                main.style.marginLeft = "250px";
+            } else {
+                toggleBtn.innerHTML = "&gt;&gt;&gt;";
+                main.style.marginLeft = "55px";
+            }
+        } else {
+            sidebar.classList.toggle("sidebar-collapsed");
+            if (sidebar.classList.contains("sidebar-collapsed")) {
+                toggleBtn.innerHTML = "&gt;&gt;&gt;";
+                main.style.marginLeft = "55px";
+            } else {
+                toggleBtn.innerHTML = "&lt;&lt;&lt;";
+                main.style.marginLeft = "250px";
+            }
+        }
+    }
 
-            <p>
-                This worked fine (~15sec/TIF). 
-                Still lot slower than the phase correlation approach. 
-                I'm not super patient so the result images are those I got using phase correlation.
-            </p>
-            <img src="./assets/proj1/blank_space_filler.png">
-            <p style="font-size: 0.6em; text-align: center;">(unrelated, a gift my friend got me)</p>
-        </div>
-    </div>
-    <div> 
+    // Initialize the state on page load
+    window.addEventListener('load', function() {
+        var sidebar = document.getElementById("mySidebar");
+        var main = document.getElementById("main");
+        var toggleBtn = document.querySelector(".toggle-btn");
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove("sidebar-collapsed");
+            toggleBtn.innerHTML = "&gt;&gt;&gt;";
+            main.style.marginLeft = "55px";
+        } else {
+            toggleBtn.innerHTML = "&lt;&lt;&lt;";
+            main.style.marginLeft = "250px";
+        }
+    });
 
-    </div>
-    <div class="header-line"></div>
-    <p> here are all the images:</p>
-    <div class="image-grid">
-        <div>
-            <b>cathethedral</b>
-            <img src="./assets/proj1/results/cathedral.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>church</b>
-            <img src="./assets/proj1/results/church.jpeg">
-            <p>red shift: (58, 3630)</p>
-            <p>green shift: (25, 3)</p>
-        </div>
-        <div>
-            <b>emir</b>
-            <img src="./assets/proj1/results/emir.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>harvesters</b>
-            <img src="./assets/proj1/results/harvesters.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>icon</b>
-            <img src="./assets/proj1/results/icon.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>lady</b>
-            <img src="./assets/proj1/results/lady.jpeg">
-            <p>red shift: (120, 13)</p>
-            <p>green shift: (57, 9)</p>
-        </div>
-        <div>
-            <b>melons</b>
-            <img src="./assets/proj1/results/melons.jpeg">
-            <p>red shift: (176, 14)</p>
-            <p>green shift: (79, 8)</p>
-        </div>
-        <div>
-            <b>monastery</b>
-            <img src="./assets/proj1/results/monastery.jpeg">
-            <p>red shift: (3, 2)</p>
-            <p>green shift: (338, 2)</p>
-        </div>
-        <div>
-            <b>onion church</b>
-            <img src="./assets/proj1/results/onion_church.jpeg">
-            <p>red shift: (107, 34)</p>
-            <p>green shift: (51, 19)</p>
-        </div>
-        <div>
-            <b>sculpture</b>
-            <img src="./assets/proj1/results/sculpture.jpeg">
-            <p>red shift: (140, 3773)</p>
-            <p>green shift: (33, 3789)</p>
-        </div>
-        <div>
-            <b>self portrait</b>
-            <img src="./assets/proj1/results/self_portrait.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>3 generations</b>
-            <img src="./assets/proj1/results/three_generations.jpeg">
-            <p>red shift: (111, 7)</p>
-            <p>green shift: (56, 12)</p>
-        </div>
-        <div>
-            <b>tobolsk</b>
-            <img src="./assets/proj1/results/tobolsk.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-        <div>
-            <b>train</b>
-            <img src="./assets/proj1/results/train.jpeg">
-            <p>red shift: (106, 41)</p>
-            <p>green shift: (49, 24)</p>
-        </div>
-    </div>
-
-
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        var sidebar = document.getElementById("mySidebar");
+        var toggleBtn = document.querySelector(".toggle-btn");
+        var main = document.getElementById("main");
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove("sidebar-collapsed");
+            sidebar.classList.remove("sidebar-expanded");
+            toggleBtn.innerHTML = "&gt;&gt;&gt;";
+            main.style.marginLeft = "55px";
+        } else {
+            sidebar.classList.remove("sidebar-expanded");
+            if (!sidebar.classList.contains("sidebar-collapsed")) {
+                toggleBtn.innerHTML = "&lt;&lt;&lt;";
+                main.style.marginLeft = "250px";
+            }
+        }
+    });
+    </script>
 </body>
-</HTML>
+</html>
