@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title>proj3</title>
@@ -10,6 +10,7 @@
         <script type="text/javascript" id="MathJax-script" async
             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
         </script>
+        <script src="main.js"></script>
     </head>
     <body>
     <div class="content-wrapper">
@@ -21,12 +22,24 @@
             <div class="header-line"></div>
             <div class="sidebar-content">
                 <ol>
-                    <li><a href="#part-1">Defining Correspondences</a></li>
-                    <li><a href="#part-2">Computing the "Mid-way Face"</a></li>
-                    <li><a href="#part-3">The Morph Sequence</a></li>
-                    <li><a href="#part-4">The "Mean face" of a population</a></li>
-                    <li><a href="#part-5">Caricatures: Extrapolating from the mean</a></li>
-                    <li><a href="#part-6">Bells and Whistles</a></li>
+                    <li>
+                        <a href="#part-1">Defining Correspondences</a>
+                    </li>
+                    <li>
+                        <a href="#part-2">Computing the "Mid-way Face"</a>
+                    </li>
+                    <li>
+                        <a href="#part-3">The Morph Sequence</a>
+                    </li>
+                    <li>
+                        <a href="#part-4">The "Mean face" of a population</a>
+                    </li>
+                    <li>
+                        <a href="#part-5">Caricatures: Extrapolating from the mean</a>
+                    </li>
+                    <li>
+                        <a href="#part-6">Bells and Whistles</a>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -86,7 +99,7 @@
                 \[ \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\  y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} = T\begin{bmatrix} x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\  1 & 1 & 1 \end{bmatrix} \]
 
                 so I let
-                \[ T = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \begin{bmatrix}x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\ 1 & 1 & 1\end{bmatrix}^{-1}\]
+                \[ T = \begin{bmatrix} x_{d,1} & x_{d,2} & x_{d,3} \\ y_{d,1} & y_{d,2} & y_{d,3} \\ 1 & 1 & 1 \end{bmatrix} \begin{bmatrix}x_{s,1} & x_{s,2} & x_{s,3} \\  y_{s,1} & y_{s,2} & y_{s,3} \\1 & 1 & 1\end{bmatrix}^{-1}\]
 
                 which yielded
                 \[t_d = T t_s\]
@@ -173,67 +186,5 @@
             </div>
         </div>
     </div>
-    <script>
-    function toggleNav() {
-        var sidebar = document.getElementById("mySidebar");
-        var main = document.getElementById("main");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        
-        if (window.innerWidth <= 768) {
-            sidebar.classList.toggle("sidebar-expanded");
-            if (sidebar.classList.contains("sidebar-expanded")) {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px"; // Corrected to 250px
-            } else {
-                toggleBtn.innerHTML = "&gt;&gt;&gt;";
-                main.style.marginLeft = " 55px";
-            }
-        } else {
-            sidebar.classList.toggle("sidebar-collapsed");
-            if (sidebar.classList.contains("sidebar-collapsed")) {
-                toggleBtn.innerHTML = "&gt;&gt;&gt;";
-                main.style.marginLeft = " 55px";
-            } else {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px";
-            }
-        }
-    }
-
-    // Initialize the state on page load
-    window.addEventListener('load', function() {
-        var sidebar = document.getElementById("mySidebar");
-        var main = document.getElementById("main");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove("sidebar-collapsed");
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = " 55px";
-        } else {
-            toggleBtn.innerHTML = "&lt;&lt;&lt;";
-            main.style.marginLeft = "250px"; // Corrected to 250px
-        }
-    });
-
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        var sidebar = document.getElementById("mySidebar");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        var main = document.getElementById("main");
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove("sidebar-collapsed");
-            sidebar.classList.remove("sidebar-expanded");
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = " 55px";
-        } else {
-            sidebar.classList.remove("sidebar-expanded");
-            if (!sidebar.classList.contains("sidebar-collapsed")) {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px"; // Corrected to 250px
-            }
-        }
-    });
-    </script>
     </body>
 </html>
-</DOCTYPE>

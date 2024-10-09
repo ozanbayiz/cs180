@@ -8,65 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles2.css">
     <link rel="icon" href="./assets/proj1/wide_emir.png">
-
-    <style>
-        .img-text-container {
-            display: flex;                  /* Enable flexbox layout */
-            justify-content: space-between; /* Space items out */
-            /* align-items: center;             */
-            padding: 2vw;                  
-            /* border: 1px solid #ccc;          */
-        }
-        .img-text-container .text {
-            flex: 1;                        /* Allow text to take available space */
-            margin-left: 1vw;             /* Space between text and image */
-        }
-        .img-text-container .img{
-            max-width: 50%;
-            height: auto;
-            margin-right: 5vw;
-        }
-        @media (max-width: 600px) {
-        p, li {
-            font-size: 0.75em;
-        }
-        .img-text-container {
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            width: 100%
-        }
-
-        .img-text-container .img{
-            max-width: 100%;
-            height: auto;
-        }
-}
-        
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Flexible column layout */
-            gap: 10px;
-            padding: 10px;
-        }
-
-        /* Style for the individual images */
-        .image-grid img {
-            width: 100%;    /* Make each image fill its grid cell */
-            height: auto;   /* Maintain aspect ratio */
-            border: 1px solid #ccc;  /* Optional border around images */
-        }
-        .image-grid b {
-            width: 100%;    /* Make each image fill its grid cell */
-            height: auto;   /* Maintain aspect ratio */
-        }
-        .image-grid p {
-            width: 100%;    /* Make each image fill its grid cell */
-            height: auto;   /* Maintain aspect ratio */
-            font-size: 0.8em;
-            margin: 0;
-        }
-    </style>
+    <script src="main.js"></script>
 </head>
 <body> 
     <div class="content-wrapper">
@@ -78,10 +20,18 @@
             <div class="header-line"></div>
             <div class="sidebar-content">
                 <ol>
-                    <li><a href="#introduction">Introduction</a></li>
-                    <li><a href="#phase-correlation">Phase Correlation</a></li>
-                    <li><a href="#image-pyramid">Image Pyramid</a></li>
-                    <li><a href="#results">Results</a></li>
+                    <li>
+                        <a href="#introduction">Introduction</a>
+                    </li>
+                    <li>
+                        <a href="#phase-correlation">Phase Correlation</a>
+                    </li>
+                    <li>
+                        <a href="#image-pyramid">Image Pyramid</a>
+                    </li>
+                    <li>
+                        <a href="#results">Results</a>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -246,67 +196,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-    function toggleNav() {
-        var sidebar = document.getElementById("mySidebar");
-        var main = document.getElementById("main");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        
-        if (window.innerWidth <= 768) {
-            sidebar.classList.toggle("sidebar-expanded");
-            if (sidebar.classList.contains("sidebar-expanded")) {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px";
-            } else {
-                toggleBtn.innerHTML = "&gt;&gt;&gt;";
-                main.style.marginLeft = "55px";
-            }
-        } else {
-            sidebar.classList.toggle("sidebar-collapsed");
-            if (sidebar.classList.contains("sidebar-collapsed")) {
-                toggleBtn.innerHTML = "&gt;&gt;&gt;";
-                main.style.marginLeft = "55px";
-            } else {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px";
-            }
-        }
-    }
-
-    // Initialize the state on page load
-    window.addEventListener('load', function() {
-        var sidebar = document.getElementById("mySidebar");
-        var main = document.getElementById("main");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove("sidebar-collapsed");
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = "55px";
-        } else {
-            toggleBtn.innerHTML = "&lt;&lt;&lt;";
-            main.style.marginLeft = "250px";
-        }
-    });
-
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        var sidebar = document.getElementById("mySidebar");
-        var toggleBtn = document.querySelector(".toggle-btn");
-        var main = document.getElementById("main");
-        if (window.innerWidth <= 768) {
-            sidebar.classList.remove("sidebar-collapsed");
-            sidebar.classList.remove("sidebar-expanded");
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = "55px";
-        } else {
-            sidebar.classList.remove("sidebar-expanded");
-            if (!sidebar.classList.contains("sidebar-collapsed")) {
-                toggleBtn.innerHTML = "&lt;&lt;&lt;";
-                main.style.marginLeft = "250px";
-            }
-        }
-    });
-    </script>
 </body>
 </html>

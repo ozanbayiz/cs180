@@ -23,8 +23,22 @@
                 <div class="header-line"></div>
                 <div class="sidebar-content">
                     <ol>
-                        <li><a href="#part-1">Fun with Filters</a></li>
-                        <li><a href="#part-2">Fun with Frequencies</a></li>
+                        <li>
+                            <a href="#part-1">Fun with Filters</a>
+                            <ol>
+                                <li><a href="#part-1-1">Finite Difference Operator</a></li>
+                                <li><a href="#part-1-2">Derivative of Gaussian</a></li>
+                            </ol>
+                        </li>
+                        <li>
+                            <a href="#part-2">Fun with Frequencies</a>
+                            <ol>
+                                <li><a href="#part-2-1">Unsharp Masking</a></li>
+                                <li><a href="#part-2-2">Hybrid Images</a></li>
+                                <li><a href="#part-2-3">Gaussian and Laplacian Stacks</a></li>
+                                <li><a href="#part-2-4">Multiresolution Blending</a></li>
+                            </ol>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -41,7 +55,7 @@
 
                 <h2 id="part-1"> Part 1: "Fun" with Filters </h2>
 
-                <h3> 1.1 Finite Difference Operator </h3>
+                <h3 id="part-1-1"> 1.1 Finite Difference Operator </h3>
                 <p>
                     To calculate the gradient magnitude, I convolved the base image with derivative filters, 
                     stacked the two convolved layers, and took the norm of the resultant vector.
@@ -69,7 +83,7 @@
                 </div>
                 <br>
 
-                <h3> 1.2 Derivative of Gaussian </h3>
+                <h3 id="part-1-2"> 1.2 Derivative of Gaussian </h3>
                 <p>
                     I created a gaussian kernel using <code>cv2.GetGaussianKernel()</code>.
                 </p>
@@ -105,7 +119,7 @@
 
                 <h2 id="part-2"> Part 2: "Fun" with Frequencies</h2>
                 
-                <h3> 2.1 Unsharp Masking </h3>
+                <h3 id="part-2-1"> 2.1 Unsharp Masking </h3>
                 <p>
                     To create the high-pass filter, I took the gaussian Kernel, normalized it, and subtracted it from a unit impulse.
                     To create the unsharp-masking filter, I took this high-pass filter and added it back to the unit impulse.
@@ -128,7 +142,7 @@
                 </div>
                 <br>
 
-                <h3> 2.2 Hybrid Images </h3>
+                <h3 id="part-2-2"> 2.2 Hybrid Images </h3>
                 <p>
                     Prof. Efros once mentioned in lecture that his efforts to grow berries were undermined by a hummingbird which which was able to identify all the ripe berries.
                     I present to you:
@@ -188,7 +202,7 @@
 
                 <br>
 
-                <h3> 2.3 Gaussian and Laplacian Stacks </h3>
+                <h3 id="part-2-3"> 2.3 Gaussian and Laplacian Stacks </h3>
                 <div class="img-text-container">
                     <div class="text-container">
                         <p>
@@ -232,7 +246,7 @@
                 </div>
 
                 <br>
-                <h3> 2.4 Multiresolution Blending </h3>
+                <h3 id="part-2-4"> 2.4 Multiresolution Blending </h3>
                 <div class="img-text-container">
                     <div class="text-container">
                         <p>
@@ -249,16 +263,16 @@
                         <p>
                             chillllllll
                         </p>
-                        <div class="image-container">
-                            <div>
+                        <!-- <div class="image-container"> -->
+                            <div style="align-items: center; display: flex; flex-direction: column;">
                                 <h2> Le Oraple ... . .. . .. .</h2>
-                                <img src="./assets/proj2/blends/oraple.png", style="width: 100%; height: auto;">
+                                <img src="./assets/proj2/blends/oraple.png", style="max-width: 80%; height: auto;">
                             </div>
-                        </div>
+                        <!-- </div> -->
                     
                     </div>
                     <div class="image-container">
-                        <img src="./assets/proj2/figures/apple_orange_masking.png" style="max-height: 1000px;"">
+                        <img src="./assets/proj2/figures/apple_orange_masking.png" style="max-height: 1000px;">
                     </div>
                 </div>
 

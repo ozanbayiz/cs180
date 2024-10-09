@@ -10,36 +10,29 @@ function adjustTextContent() {
 }
 
 function toggleNav() {
-    var sidebar = document.getElementById("mySidebar");
-    var main = document.getElementById("main");
-    var toggleBtn = document.querySelector(".toggle-btn");
+    const sidebar = document.getElementById("mySidebar");
+    const main = document.getElementById("main");
+    const toggleBtn = document.querySelector(".toggle-btn");
+    const isMobile = window.innerWidth <= 768;
     
-    if (window.innerWidth <= 768) {
+    if (isMobile) {
         sidebar.classList.toggle("sidebar-expanded");
-        if (sidebar.classList.contains("sidebar-expanded")) {
-            toggleBtn.innerHTML = "&lt;&lt;&lt;";
-            main.style.marginLeft = "250px";
-        } else {
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = "55px";
-        }
+        toggleBtn.innerHTML = sidebar.classList.contains("sidebar-expanded") ? "&lt;&lt;&lt;" : "&gt;&gt;&gt;";
+        main.style.marginLeft = sidebar.classList.contains("sidebar-expanded") ? "250px" : "55px";
     } else {
         sidebar.classList.toggle("sidebar-collapsed");
-        if (sidebar.classList.contains("sidebar-collapsed")) {
-            toggleBtn.innerHTML = "&gt;&gt;&gt;";
-            main.style.marginLeft = "55px";
-        } else {
-            toggleBtn.innerHTML = "&lt;&lt;&lt;";
-            main.style.marginLeft = "250px";
-        }
+        toggleBtn.innerHTML = sidebar.classList.contains("sidebar-collapsed") ? "&gt;&gt;&gt;" : "&lt;&lt;&lt;";
+        main.style.marginLeft = sidebar.classList.contains("sidebar-collapsed") ? "55px" : "250px";
     }
 }
 
 function initializeSidebar() {
-    var sidebar = document.getElementById("mySidebar");
-    var main = document.getElementById("main");
-    var toggleBtn = document.querySelector(".toggle-btn");
-    if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById("mySidebar");
+    const main = document.getElementById("main");
+    const toggleBtn = document.querySelector(".toggle-btn");
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
         sidebar.classList.remove("sidebar-collapsed");
         toggleBtn.innerHTML = "&gt;&gt;&gt;";
         main.style.marginLeft = "55px";
@@ -47,15 +40,47 @@ function initializeSidebar() {
         toggleBtn.innerHTML = "&lt;&lt;&lt;";
         main.style.marginLeft = "250px";
     }
+
+    // Add click event listeners to dropdown items and carets
+    const dropdowns = document.querySelectorAll('.sidebar-content > ol > li');
+    dropdowns.forEach(function(dropdown) {
+        const subList = dropdown.querySelector('ol');
+        if (subList) {
+            subList.style.display = 'none';
+            const caret = document.createElement('span');
+            caret.className = 'caret';
+            caret.innerHTML = '˅';
+            dropdown.insertBefore(caret, subList);
+            
+            caret.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleDropdown(dropdown);
+            });
+        }
+    });
+}
+
+function toggleDropdown(listItem) {
+    const subList = listItem.querySelector('ol');
+    const caret = listItem.querySelector('.caret');
+    
+    if (subList) {
+        const isExpanded = subList.style.display === 'block';
+        subList.style.display = isExpanded ? 'none' : 'block';
+        listItem.classList.toggle('active', !isExpanded);
+        caret.innerHTML = isExpanded ? '˅' : '˄';
+    }
 }
 
 function handleResize() {
-    var sidebar = document.getElementById("mySidebar");
-    var toggleBtn = document.querySelector(".toggle-btn");
-    var main = document.getElementById("main");
-    if (window.innerWidth <= 768) {
-        sidebar.classList.remove("sidebar-collapsed");
-        sidebar.classList.remove("sidebar-expanded");
+    const sidebar = document.getElementById("mySidebar");
+    const toggleBtn = document.querySelector(".toggle-btn");
+    const main = document.getElementById("main");
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        sidebar.classList.remove("sidebar-collapsed", "sidebar-expanded");
         toggleBtn.innerHTML = "&gt;&gt;&gt;";
         main.style.marginLeft = "55px";
     } else {
@@ -67,12 +92,5 @@ function handleResize() {
     }
 }
 
-window.addEventListener('resize', function() {
-    adjustTextContent();
-    handleResize();
-});
-
-window.addEventListener('load', function() {
-    adjustTextContent();
-    initializeSidebar();
-});
+window.addEventListener('load', initializeSidebar);
+window.addEventListener('resize', handleResize);

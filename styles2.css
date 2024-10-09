@@ -31,7 +31,7 @@ code { color: var(--code-color); }
 
 /* Links */
 a { color: var(--main-text-color); text-decoration: none; }
-a:hover { color: var(--accent-color); text-decoration: underline; }
+a:hover { color: var(--accent-color); text-decoration: None; }
 
 p a { color: var(--code-color); }
 
@@ -47,7 +47,10 @@ p a { color: var(--code-color); }
     margin-right: -50vw;
 }
 
-img { max-width: 100%; height: auto; }
+img {
+    max-width: 100%;
+    height: auto;
+}
 
 /* ASCII Art */
 .ascii-art {
@@ -74,22 +77,59 @@ img { max-width: 100%; height: auto; }
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Flexible column layout */
     gap: 10px;
-    justify-content: center;
+    padding: 10px;
 }
 
 .image-grid img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
+    width: 100%;    /* Make each image fill its grid cell */
+    height: auto;   /* Maintain aspect ratio */
+}
+
+.image-grid b {
+    width: 100%;    /* Make each image fill its grid cell */
+    height: auto;   /* Maintain aspect ratio */
+}
+
+.image-grid p {
+    width: 100%;    /* Make each image fill its grid cell */
+    height: auto;   /* Maintain aspect ratio */
+    font-size: 0.8em;
+    margin: 0;
 }
 
 .img-text-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+    display: flex;                  /* Enable flexbox layout */
+    justify-content: space-between; /* Space items out */
+    padding: 2vw;                  
+}
+
+.img-text-container .text {
+    flex: 1;                        /* Allow text to take available space */
+    margin-left: 1vw;               /* Space between text and image */
+}
+
+.img-text-container .img {
+    max-width: 50%;
+    height: auto;
+    margin-right: 5vw;
+}
+
+@media (max-width: 600px) {
+    p, li {
+        font-size: 0.75em;
+    }
+    .img-text-container {
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        width: 100%
+    }
+    .img-text-container .img {
+        max-width: 100%;
+        height: auto;
+    }
 }
 
 /* Sidebar */
@@ -113,6 +153,7 @@ img { max-width: 100%; height: auto; }
     align-items: center;
     min-width: var(--sidebar-collapsed-width);
     margin-top: 20px;
+    padding-right: 8px; /* Add right padding to match the toggle button */
 }
 
 .toggle-btn {
@@ -121,6 +162,10 @@ img { max-width: 100%; height: auto; }
     color: var(--main-text-color);
     font-size: 1em;
     transition: 0.3s;
+}
+
+.toggle-btn:hover {
+    color: var(--accent-color);
 }
 
 .sidebar a {
@@ -216,4 +261,72 @@ img { max-width: 100%; height: auto; }
         flex-direction: column;
         align-items: center;
     }
+}
+.sidebar-content ol {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar-content ol ol {
+    margin-left: 20px;
+    display: none;
+}
+
+.sidebar-content li.active > ol {
+    display: block;
+}
+
+.sidebar-content li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-right: 8px; /* Add right padding to match the toggle button */
+}
+
+.sidebar-content li > a {
+    flex-grow: 1;
+    padding: 8px 0 8px 8px; 
+}
+
+.caret {
+    cursor: pointer;
+    user-select: none;
+    padding: 8px 0; /* Remove horizontal padding */
+    transition: color 0.3s;
+    font-size: 1em;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.caret:hover {
+    color: var(--accent-color);
+}
+
+.sidebar-content li.active > a {
+    font-weight: bold;
+}
+
+/* .sidebar-content .sidebar-list {
+    list-style-type: decimal !important;
+    padding-left: 20px !important;
+}
+
+.sidebar-content .sidebar-list ol {
+    list-style-type: lower-alpha !important;
+    padding-left: 20px !important;
+} */
+
+.sidebar-list {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.sidebar-list ol {
+    list-style-type: lower-alpha;
+    padding-left: 20px;
+}
+
+.sidebar-list li {
+    margin-bottom: 5px;
 }
