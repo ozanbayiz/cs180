@@ -249,6 +249,20 @@ img {
         display: block;
     }
 
+    /* Ensure all text elements inherit the new font size */
+    #main, #main p, #main li, #main h1, #main h2, #main h3, #main h4, #main h5, #main h6 {
+        font-size: inherit;
+    }
+
+    /* Adjust heading sizes for mobile */
+    #main h1 { font-size: 1.5rem; }
+    #main h2 { font-size: 1.3rem; }
+    #main h3 { font-size: 1.1rem; }
+}
+
+/* Ensure proj3.html specific content inherits font size */
+#main .content-wrapper {
+    font-size: inherit;
 }
 
 @media screen and (min-width: 1500px) {
