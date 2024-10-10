@@ -23,9 +23,9 @@ body {
 }
 
 /* Typography */
-h1 { font-size: 2em; font-weight: bold; }
-h2 { font-size: 1.25em; font-style: italic; }
-h3 { font-size: 1em; font-weight: bold; }
+h1 { font-size: 2rem; font-weight: bold; }
+h2 { font-size: 1.25rem; font-style: italic; }
+h3 { font-size: 1rem; font-weight: bold; }
 
 code { color: var(--code-color); }
 
@@ -93,27 +93,28 @@ img {
 }
 
 .image-grid p {
-    width: 100%;    /* Make each image fill its grid cell */
-    height: auto;   /* Maintain aspect ratio */
-    font-size: 0.8em;
+    width: 100%;
+    height: auto;
+    font-size: 1rem;
     margin: 0;
 }
 
 .img-text-container {
-    display: flex;                  /* Enable flexbox layout */
-    justify-content: space-between; /* Space items out */
-    padding: 2vw;                  
+    display: flex;
+    justify-content: space-between;
+    padding: 2vw;
+    align-items: flex-start; /* Align items to the top */
 }
 
 .img-text-container .text {
-    flex: 1;                        /* Allow text to take available space */
-    margin-left: 1vw;               /* Space between text and image */
+    flex: 1;
+    margin-left: 8px; /* Add 4px margin to the left of the text */
 }
 
-.img-text-container .img {
-    max-width: 50%;
+.img-text-container .image-container {
+    max-width: calc(50% - 4px); /* Subtract 4px from the max-width */
     height: auto;
-    margin-right: 5vw;
+    margin-right: 8px; /* Add 4px margin to the right of the image */
 }
 
 @media (max-width: 600px) {
@@ -144,6 +145,7 @@ img {
     overflow-x: hidden;
     transition: 0.5s;
     border-right: 3px dashed var(--main-text-color);
+    font-size: 16px; /* Set a base font size for the sidebar */
 }
 
 .sidebar-header {
@@ -160,7 +162,7 @@ img {
     padding: 8px;
     cursor: pointer;
     color: var(--main-text-color);
-    font-size: 1em;
+    font-size: 1rem;
     transition: 0.3s;
 }
 
@@ -170,7 +172,7 @@ img {
 
 .sidebar a {
     padding: 8px;
-    font-size: 1em;
+    font-size: 1rem;
     display: block;
 }
 
@@ -193,7 +195,8 @@ img {
 
 /* Media Queries */
 @media screen and (max-width: 768px) {
-    p, li { font-size: 0.75em; }
+    /* Remove font-size changes for p and li */
+    /* p, li { font-size: 0.75em; } <- Remove this line */
 
     .ascii-art-container {
         flex-direction: column;
@@ -225,7 +228,7 @@ img {
     }
 
     .sidebar {
-        width: var(--sidebar-collapsed-width);
+        width: min(30vw, var(--sidebar-collapsed-width));
     }
 
     .sidebar-content {
@@ -233,21 +236,22 @@ img {
     }
 
     #main {
-        margin-left: var(--sidebar-collapsed-width);
+        margin-left: min(30vw, var(--sidebar-collapsed-width));
         padding: 5px;
     }
 
     .sidebar-expanded {
-        width: var(--sidebar-width);
+        width: min(30vw, var(--sidebar-width));
     }
 
     .sidebar-expanded .sidebar-content {
         display: block;
     }
 
-    .sidebar a, .sidebar-expanded a {
-        font-size: 0.75em;
-    }
+    /* Remove this line to keep font size consistent */
+    /* .sidebar a, .sidebar-expanded a {
+        font-size: 0.75rem;
+    } */
 }
 
 @media screen and (min-width: 1500px) {
@@ -286,6 +290,7 @@ img {
 .sidebar-content li > a {
     flex-grow: 1;
     padding: 8px 0 8px 8px; 
+    font-size: 1rem;
 }
 
 .caret {
@@ -329,4 +334,36 @@ img {
 
 .sidebar-list li {
     margin-bottom: 5px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    font-size: 16px; /* Set a base font size for the sidebar */
+}
+
+.sidebar-content {
+    /* ... existing styles ... */
+}
+
+.sidebar-content a,
+.sidebar-content li,
+.sidebar-content .project-name {
+    font-size: inherit; /* Inherit font size from parent */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .sidebar {
+        font-size: 14px; /* Slightly smaller font size for mobile */
+    }
+
+    /* Ensure consistent sizing for all sidebar elements on mobile */
+    .sidebar-content a,
+    .sidebar-content li,
+    .sidebar-content .project-name {
+        font-size: inherit;
+    }
+
+    /* Adjust other mobile-specific styles as needed */
+    /* ... */
 }

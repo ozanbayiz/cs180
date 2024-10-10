@@ -1,0 +1,150 @@
+/* TEXT */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    padding-right: 30px;
+    text-align: right;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.25em;
+    font-style: italic;
+}
+h2 a {
+    color: white;
+    text-decoration: none;
+}
+h2 a:hover {
+    color: violet;
+    text-decoration: None;
+}
+
+h3 {
+    font-size: 1em;
+    font-style: Bold;
+}
+
+code {
+    color: greenyellow;
+}
+
+.header-line {
+    border-bottom: 3px dashed white;
+}
+
+nav a {
+    color:white;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+nav a:hover {
+    color: violet;
+    text-decoration: None;
+}
+
+p a {
+    color: greenyellow;
+    text-decoration: none;
+}
+p a:hover {
+    color: violet;
+    text-decoration: underline;
+}
+
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ASCII ART */
+.ascii-art {
+    white-space: pre;
+    font-family: monospace;
+    margin: 0 2vw;
+}
+
+.ascii-art a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.ascii-art a:hover {
+    color: violet;
+}
+
+/* ================================================================ */
+
+/* CONTAINERS */
+
+.ascii-art-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+    .ascii-art-container {
+        flex-direction: column;
+        justify-content: center;
+        margin: 0;
+        width: 100%
+    }
+
+    .ascii-art {
+        width: 100%;
+        margin: 0;
+        font-size: 2.72vw
+    }
+}
+
+.project-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.project-link {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: var(--main-text-color);
+    transition: color 0.3s ease;
+}
+
+.project-link:hover {
+    color: var(--accent-color);
+}
+
+.project-name {
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    /* ... other mobile styles ... */
+
+    /* Ensure project name style remains consistent on mobile */
+    .project-name {
+        font-size: 1rem;
+        font-weight: normal;
+    }
+}

@@ -1,3 +1,8 @@
+// Define sidebar width variables
+const SIDEBAR_EXPANDED_WIDTH = '250px';
+const SIDEBAR_COLLAPSED_WIDTH = '55px';
+const SIDEBAR_MOBILE_WIDTH = '30vw';
+
 function adjustTextContent() {
     const projectNames = document.querySelectorAll('.project-name');
 
@@ -5,24 +10,50 @@ function adjustTextContent() {
         const smallScreenText = projectName.getAttribute('small-screen-text');
         const largeScreenText = projectName.getAttribute('large-screen-text');
 
-        projectName.textContent = window.innerWidth < 880 ? smallScreenText : largeScreenText;
+        projectName.textContent = window.innerWidth < 768 ? smallScreenText : largeScreenText;
     });
+}
+
+function setMainWidth(sidebarWidth) {
+    const main = document.getElementById("main");
+    const viewportWidth = window.innerWidth;
+    const maxWidth = 1000;
+    const isMobile = viewportWidth <= 768;
+    
+    // Ensure sidebar width doesn't exceed 30vw on mobile
+    if (isMobile && sidebarWidth.includes('vw')) {
+        sidebarWidth = Math.min(parseInt(sidebarWidth), 30) + 'vw';
+    }
+    
+    // Calculate the available width
+    const availableWidth = viewportWidth - (sidebarWidth.includes('vw') 
+        ? viewportWidth * parseInt(sidebarWidth) / 100 
+        : parseInt(sidebarWidth));
+    
+    // Set the width to the smaller of availableWidth and maxWidth
+    const newWidth = Math.min(availableWidth, maxWidth);
+    
+    main.style.width = `${newWidth}px`;
+    main.style.marginLeft = sidebarWidth;
 }
 
 function toggleNav() {
     const sidebar = document.getElementById("mySidebar");
-    const main = document.getElementById("main");
     const toggleBtn = document.querySelector(".toggle-btn");
     const isMobile = window.innerWidth <= 768;
     
+    console.log("Toggle Nav called. isMobile:", isMobile);
+
     if (isMobile) {
         sidebar.classList.toggle("sidebar-expanded");
         toggleBtn.innerHTML = sidebar.classList.contains("sidebar-expanded") ? "&lt;&lt;&lt;" : "&gt;&gt;&gt;";
-        main.style.marginLeft = sidebar.classList.contains("sidebar-expanded") ? "250px" : "55px";
+        const sidebarWidth = sidebar.classList.contains("sidebar-expanded") ? SIDEBAR_MOBILE_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
+        setMainWidth(sidebarWidth);
     } else {
         sidebar.classList.toggle("sidebar-collapsed");
         toggleBtn.innerHTML = sidebar.classList.contains("sidebar-collapsed") ? "&gt;&gt;&gt;" : "&lt;&lt;&lt;";
-        main.style.marginLeft = sidebar.classList.contains("sidebar-collapsed") ? "55px" : "250px";
+        const sidebarWidth = sidebar.classList.contains("sidebar-collapsed") ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH;
+        setMainWidth(sidebarWidth);
     }
 }
 
@@ -35,10 +66,10 @@ function initializeSidebar() {
     if (isMobile) {
         sidebar.classList.remove("sidebar-collapsed");
         toggleBtn.innerHTML = "&gt;&gt;&gt;";
-        main.style.marginLeft = "55px";
+        setMainWidth(SIDEBAR_COLLAPSED_WIDTH);
     } else {
         toggleBtn.innerHTML = "&lt;&lt;&lt;";
-        main.style.marginLeft = "250px";
+        setMainWidth(SIDEBAR_EXPANDED_WIDTH);
     }
 
     // Add click event listeners to dropdown items and carets
@@ -82,15 +113,20 @@ function handleResize() {
     if (isMobile) {
         sidebar.classList.remove("sidebar-collapsed", "sidebar-expanded");
         toggleBtn.innerHTML = "&gt;&gt;&gt;";
-        main.style.marginLeft = "55px";
+        setMainWidth(SIDEBAR_COLLAPSED_WIDTH);
     } else {
         sidebar.classList.remove("sidebar-expanded");
         if (!sidebar.classList.contains("sidebar-collapsed")) {
             toggleBtn.innerHTML = "&lt;&lt;&lt;";
-            main.style.marginLeft = "250px";
+            setMainWidth(SIDEBAR_EXPANDED_WIDTH);
+        } else {
+            setMainWidth(SIDEBAR_COLLAPSED_WIDTH);
         }
     }
+
+    adjustTextContent();
 }
 
 window.addEventListener('load', initializeSidebar);
+window.addEventListener('load', adjustTextContent);
 window.addEventListener('resize', handleResize);
