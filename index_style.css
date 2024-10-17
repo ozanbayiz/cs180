@@ -10,7 +10,8 @@ body {
     background-color: black;
     color: white;
     margin: 0;
-    padding: 20px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 header {
@@ -45,8 +46,14 @@ code {
     color: greenyellow;
 }
 
+.header-line-container {
+    width: 100vw;
+    margin-left: 0; /* Remove negative margin */
+}
+
 .header-line {
     border-bottom: 3px dashed white;
+    width: 100%;
 }
 
 nav a {
@@ -146,5 +153,10 @@ img {
     .project-name {
         font-size: 1rem;
         font-weight: normal;
+    }
+
+    
+    #mySidebar {
+        padding-left: 0;
     }
 }
