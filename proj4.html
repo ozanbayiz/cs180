@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>proj4</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        
+        <script src="main.js"></script>
+        <!-- <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script> -->
+
+    </head>
+    <body> 
+        <div class="content-wrapper">
+            <div id="mySidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <a href="index.html" class="back-link">back</a>
+                    <div class="toggle-btn" onclick="toggleNav()">&gt;&gt;&gt;</div>
+                </div>
+                <div class="header-line"></div>
+                <div class="sidebar-content">
+                    <ol>
+                        <li>
+                            <a href="#part-1">Shoot the Pictures</a>
+                        </li>
+                        <li>
+                            <a href="#part-2">Recover Homographies</a>
+                        </li>
+                        <li></li>
+                            <a href="#part-3">Warp the Images</a>
+                        </li>
+                        <li>
+                            <a href="#part-4">Image Rectification</a>
+                        </li>
+                        <li>
+                            <a href="#part-5">Blend The Images into a mosaic</a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div id="main">
+                <h1> project 4 </h1>
+
+                <h2> [Auto]stitching Photo Mosaics </h2>
+                <div class="image-container">
+                    <img src="./assets/misc/nyan_cat.gif">
+                </div>
+                <br>
+                <div class="header-line"></div>
+
+                <h2 id="part-1"> Part 1: Shoot the Pictures </h2>
+                <p>
+                    I went to a store and took pictures of some mannequins wearing outfits I liked.
+                </p>
+                <div class="header-line"></div>
+                <h2 id="part-2"> Part 2: Recover Homographies </h2>
+                <p>
+                    Since applying a homography reduces to a matrix multiplication
+                    \[
+                    w \begin{bmatrix} x' \\ y' \\ 1 \end{bmatrix} 
+                    = \begin{bmatrix} a & b & c \\ d & e & f \\ g & h & 1 \end{bmatrix} 
+                    \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} 
+                    \]
+                    
+                    which can be rewritten as
+                    \[
+                    \begin{aligned}
+                    wx' &= ax + by + c \\
+                    wy' &= dx + ey + f \\
+                    w &= gx + hy + 1
+                    \end{aligned}
+                    \]
+
+                    \[
+                    \implies
+                    \begin{aligned}
+                    (gx + hy + 1)x' &= ax + by + c \\
+                    (gx + hy + 1)y' &= dx + ey + f \\
+                    \end{aligned}
+                    \]
+
+                    \[
+                    \implies
+                    \begin{aligned}
+                    x' &= ax + by + c - gxx'- hx'y\\
+                    y' &= dx + ey + f - gxy'- hyy'\\
+                    \end{aligned}
+                    \]
+
+                    but this is also just
+                    \[
+                    \begin{bmatrix}  x' \\ y' \end{bmatrix}
+                    =
+                    \begin{bmatrix}
+                    x & y & 1 & 0 & 0 & 0 & -xx' & -xy' \\
+                    0 & 0 & 0 & x & y & 1 & -yx' & -yy'
+                    \end{bmatrix}
+                    \begin{bmatrix} a \\ b \\ c \\ d \\ e \\ f \\g \\ h \end{bmatrix}
+                    \]
+
+                    so, given n correspondences, we can write this as a linear system
+                    \[
+                    \begin{bmatrix}
+                    x_1 & y_1 & 1 & 0 & 0 & 0 & -x_1x_1' & -x_1y_1' \\
+                    0 & 0 & 0 & x_1 & y_1 & 1 & -y_1x_1' & -y_1y_1' \\
+                    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+                    x_n & y_n & 1 & 0 & 0 & 0 & -x_nx_n' & -x_ny_n' \\
+                    0 & 0 & 0 & x_n & y_n & 1 & -y_nx_n' & -y_ny_n'
+                    \end{bmatrix}
+                    \begin{bmatrix} a \\ b \\ c \\ d \\ e \\ f \\g \\ h \end{bmatrix}
+                    =
+                    \begin{bmatrix} x_1' \\ y_1' \\ \vdots \\ x_n' \\ y_n' \end{bmatrix}
+                    \]
+
+                    we can easily solve for the homography matrix using least squares.
+                </p>
+                <div class="header-line"></div>
+                <h2 id="part-3"> Part 3: Warp the Images </h2>
+                <p>
+                    To get the dimensions of the warped image, 
+                        we can apply the homography matrix to the corners of the image
+                        and compute the bounding box of the warped image with these points.
+
+                    We can also skip this step altogether by using the shape of the source image for the warped image.
+                </p>
+                <p>
+                    Next, we can create indices for the warped image,
+                        then apply the inverse homography matrix to map these points to the source image.
+
+                    Finally, we interpolate the pixels of the source image to the destination image 
+                    (I used <code>scipy.interpolate.RectBivariateSpline</code>), 
+                        and apply a mask to the destination image to remove the parts that are not in the source image.
+                </p>
+                <div class="header-line"></div>
+                <h2 id="part-4"> Part 4: Image Rectification </h2>
+                    <div class="image-grid">
+                        <img src="./assets/proj4/rect1a.png">
+                        <img src="./assets/proj4/rect1b.png">
+                    </div>
+                    <div class="image-grid">
+                        <img src="./assets/proj4/rect2a.png">
+                        <img src="./assets/proj4/rect2b.png">
+                    </div>
+                <p>
+
+                </p>
+                <div class="header-line"></div>
+                <h2 id="part-5"> Part 5: Blend The Images into a mosaic </h2>
+
+            </div>
+        </div>
+    </body>
+</html>

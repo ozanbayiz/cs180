@@ -165,7 +165,8 @@ img {
 #main {
     transition: margin-left .5s;
     width: auto;
-    padding: 0 8px;
+    padding-left: 16px;
+    padding-right: 16px;
     box-sizing: border-box;
     margin-left: var(--sidebar-width);
     margin-right: auto;
