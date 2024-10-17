@@ -10,7 +10,7 @@ function adjustTextContent() {
         const smallScreenText = projectName.getAttribute('small-screen-text');
         const largeScreenText = projectName.getAttribute('large-screen-text');
 
-        projectName.textContent = window.innerWidth < 768 ? smallScreenText : largeScreenText;
+        projectName.textContent = window.innerWidth <= 768 ? smallScreenText : largeScreenText;
     });
 }
 
@@ -127,6 +127,52 @@ function handleResize() {
     adjustTextContent();
 }
 
-window.addEventListener('load', initializeSidebar);
-window.addEventListener('load', adjustTextContent);
+function createImageOverlay() {
+    const overlay = document.createElement('div');
+    overlay.className = 'image-overlay';
+    
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'close-btn';
+    closeBtn.innerHTML = 'X';
+    closeBtn.onclick = closeOverlay;
+    
+    const img = document.createElement('img');
+    img.className = 'enlarged-image';
+    
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    
+    return overlay;
+}
+
+function openOverlay(imageSrc) {
+    const overlay = document.querySelector('.image-overlay') || createImageOverlay();
+    const enlargedImage = overlay.querySelector('.enlarged-image');
+    enlargedImage.src = imageSrc;
+    overlay.style.display = 'flex';
+}
+
+function closeOverlay() {
+    const overlay = document.querySelector('.image-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+function setupImageGrid() {
+    const images = document.querySelectorAll('.image-grid img');
+    images.forEach(img => {
+        img.addEventListener('click', function() {
+            openOverlay(this.src);
+        });
+    });
+}
+
+window.addEventListener('load', function() {
+    initializeSidebar();
+    adjustTextContent();
+    setupImageGrid();
+});
+
 window.addEventListener('resize', handleResize);

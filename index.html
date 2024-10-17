@@ -7,6 +7,20 @@
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index_style.css">
+    <script src="main.js"></script>
+    <script>
+        function adjustTextContent() {
+            const projectNames = document.querySelectorAll('.project-name');
+            projectNames.forEach((projectName) => {
+                const smallScreenText = projectName.getAttribute('small-screen-text');
+                const largeScreenText = projectName.getAttribute('large-screen-text');
+                projectName.textContent = window.innerWidth <= 768 ? smallScreenText : largeScreenText;
+            });
+        }
+
+        window.addEventListener('load', adjustTextContent);
+        window.addEventListener('resize', adjustTextContent);
+    </script>
 </head>
 <body>
     <div class="ascii-art-container" id="ascii-container"><div class="ascii-art" id="ascii-spider"><pre id="ascii-art">                  XXX                 XXX     XXX                 XXX
@@ -59,8 +73,10 @@ XXX   XXX   XXX   XXX      XXX         XXX       XXX
  XXX XXX    XXX   XXX      XXX       XXX XXX      XXX XXX
 </a></pre></div>
 </div>
-    <div class="header-line"></div>
-    <p></p>
+    <div class="header-line-container">
+        <div class="header-line"></div>
+    </div>
+    <div style="padding-top: 8px;">
     <nav>
         <a href="proj1.html" class="project-name"
         small-screen-text="proj1: Images of the Russian Empire"
@@ -79,6 +95,12 @@ XXX   XXX   XXX   XXX      XXX         XXX       XXX
       large-screen-text="project3: Face Morphing"
       >proj3: Face Morphing</a>
     </nav>
-    <script src="main.js"></script>
+    <nav>
+      <a href="proj4.html" class="project-name"
+      small-screen-text="proj4: Photo Mosaics"
+      large-screen-text="project4: [Auto]Stitching and Mosaics"
+      >proj4: [Auto]Stitching and Mosaics</a>
+    </nav>
+  </div>
 </body>
 </html>
