@@ -139,24 +139,79 @@ function createImageOverlay() {
     const img = document.createElement('img');
     img.className = 'enlarged-image';
     
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'nav-btn prev-btn';
+    prevBtn.innerHTML = '&lt;';
+    prevBtn.onclick = () => navigateImage(-1);
+    
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'nav-btn next-btn';
+    nextBtn.innerHTML = '&gt;';
+    nextBtn.onclick = () => navigateImage(1);
+    
     overlay.appendChild(closeBtn);
     overlay.appendChild(img);
+    overlay.appendChild(prevBtn);
+    overlay.appendChild(nextBtn);
     document.body.appendChild(overlay);
     
     return overlay;
 }
+
+let currentImageIndex = 0;
+let imageGrid = [];
 
 function openOverlay(imageSrc) {
     const overlay = document.querySelector('.image-overlay') || createImageOverlay();
     const enlargedImage = overlay.querySelector('.enlarged-image');
     enlargedImage.src = imageSrc;
     overlay.style.display = 'flex';
+    
+    imageGrid = Array.from(document.querySelectorAll('.image-grid img'));
+    currentImageIndex = imageGrid.findIndex(img => img.src === imageSrc);
+    
+    updateNavigationButtons();
 }
 
 function closeOverlay() {
     const overlay = document.querySelector('.image-overlay');
     if (overlay) {
         overlay.style.display = 'none';
+    }
+}
+
+function navigateImage(direction) {
+    currentImageIndex = (currentImageIndex + direction + imageGrid.length) % imageGrid.length;
+    const newSrc = imageGrid[currentImageIndex].src;
+    const enlargedImage = document.querySelector('.enlarged-image');
+    enlargedImage.src = newSrc;
+    
+    updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    // fuckit this is a feature now
+    // prevBtn.style.display = currentImageIndex > 0 ? 'block' : 'none';
+    // nextBtn.style.display = currentImageIndex < imageGrid.length - 1 ? 'block' : 'none';
+}
+
+function handleKeyPress(event) {
+    const overlay = document.querySelector('.image-overlay');
+    if (overlay && overlay.style.display === 'flex') {
+        switch (event.key) {
+            case 'Escape':
+                closeOverlay();
+                break;
+            case 'ArrowLeft':
+                navigateImage(-1);
+                break;
+            case 'ArrowRight':
+                navigateImage(1);
+                break;
+        }
     }
 }
 
@@ -169,10 +224,37 @@ function setupImageGrid() {
     });
 }
 
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleTouchStart(event) {
+    touchStartX = event.changedTouches[0].screenX;
+}
+
+function handleTouchEnd(event) {
+    touchEndX = event.changedTouches[0].screenX;
+    handleSwipe();
+}
+
+function handleSwipe() {
+    if (touchEndX < touchStartX) {
+        navigateImage(1); // Swipe left, go to next image
+    }
+    if (touchEndX > touchStartX) {
+        navigateImage(-1); // Swipe right, go to previous image
+    }
+}
+
 window.addEventListener('load', function() {
     initializeSidebar();
     adjustTextContent();
     setupImageGrid();
+    
+    document.addEventListener('keydown', handleKeyPress);
+    
+    const overlay = document.querySelector('.image-overlay') || createImageOverlay();
+    overlay.addEventListener('touchstart', handleTouchStart, false);
+    overlay.addEventListener('touchend', handleTouchEnd, false);
 });
 
 window.addEventListener('resize', handleResize);
