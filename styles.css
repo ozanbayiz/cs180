@@ -100,7 +100,7 @@ img {
 /* Image Grid Enlargement */
 .image-overlay {
     display: none;
-    position: fixed;
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
@@ -374,4 +374,28 @@ img {
 .MathJax_Display {
     overflow-x: auto;
     max-width: 100%;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    color: var(--accent-color);
+}
+
+.prev-btn {
+    left: 20px;
+}
+
+.next-btn {
+    right: 20px;
 }
