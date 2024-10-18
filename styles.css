@@ -454,3 +454,9 @@ img {
         margin-top: 10px;
     }
 }
+
+@media (max-width: 768px) and (orientation: landscape) {
+    p {
+        font-size: var(--text-size-mobile);
+    }
+}
