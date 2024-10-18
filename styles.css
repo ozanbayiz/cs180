@@ -223,7 +223,7 @@ img {
 }
 
 /* Media Queries */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
     html, body {
         font-size: var(--text-size-mobile);
     }

@@ -154,22 +154,20 @@ img {
 }
 
 .project-name {
-    font-size: 1rem;
+    font-size: var(--text-size-desktop);
     font-weight: normal;
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: landscape) {
     /* ... other mobile styles ... */
 
     /* Ensure project name style remains consistent on mobile */
     .project-name {
-        font-size: 1rem;
+        font-size: var(--text-size-mobile);
         font-weight: normal;
     }
-
-    
-    #mySidebar {
-        padding-left: 0;
+    .ascii-art {
+        font-size: var(--text-size-mobile);
     }
 }
