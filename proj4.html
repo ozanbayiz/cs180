@@ -9,10 +9,10 @@
         <link rel="stylesheet" href="styles.css">
         
         <script src="main.js"></script>
-        <!-- <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script type="text/javascript" id="MathJax-script" async
             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-        </script> -->
+        </script>
 
     </head>
     <body> 
@@ -38,7 +38,7 @@
                             <a href="#part-4">Image Rectification</a>
                         </li>
                         <li>
-                            <a href="#part-5">Blend The Images into a mosaic</a>
+                            <a href="#part-5">Blend The Images into a Mosaic</a>
                         </li>
                     </ol>
                 </div>
@@ -56,12 +56,26 @@
 
                 <h2 id="part-1"> Part 1: Shoot the Pictures </h2>
                 <p>
-                    I went to a store and took pictures of some mannequins wearing outfits I liked.
+                    I went to a store and took pictures of mannequins wearing outfits I liked.
                 </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/raw/1a.jpeg">
+                    <img src="./assets/proj4/raw/1b.jpeg">
+                    <img src="./assets/proj4/raw/2a.jpeg">
+                    <img src="./assets/proj4/raw/2b.jpeg">
+                    <img src="./assets/proj4/raw/3a.jpeg">
+                    <img src="./assets/proj4/raw/3b.jpeg">
+                    <img src="./assets/proj4/raw/4a.jpeg">
+                    <img src="./assets/proj4/raw/4b.jpeg">
+                    <img src="./assets/proj4/raw/5a.jpeg">
+                    <img src="./assets/proj4/raw/5b.jpeg">
+                    <img src="./assets/proj4/raw/6a.jpeg">
+                    <img src="./assets/proj4/raw/6b.jpeg">
+                </div>
                 <div class="header-line"></div>
                 <h2 id="part-2"> Part 2: Recover Homographies </h2>
                 <p>
-                    Since applying a homography reduces to a matrix multiplication
+                    Applying a homography reduces to a matrix multiplication
                     \[
                     w \begin{bmatrix} x' \\ y' \\ 1 \end{bmatrix} 
                     = \begin{bmatrix} a & b & c \\ d & e & f \\ g & h & 1 \end{bmatrix} 
@@ -93,7 +107,7 @@
                     \end{aligned}
                     \]
 
-                    but this is also just
+                    But this is also just
                     \[
                     \begin{bmatrix}  x' \\ y' \end{bmatrix}
                     =
@@ -118,27 +132,39 @@
                     \begin{bmatrix} x_1' \\ y_1' \\ \vdots \\ x_n' \\ y_n' \end{bmatrix}
                     \]
 
-                    we can easily solve for the homography matrix using least squares.
+                    and we can easily solve for the homography parameters using least squares.
                 </p>
                 <div class="header-line"></div>
                 <h2 id="part-3"> Part 3: Warp the Images </h2>
                 <p>
                     To get the dimensions of the warped image, 
                         we can apply the homography matrix to the corners of the image
-                        and compute the bounding box of the warped image with these points.
+                        and compute the bounding box of the warped image with these points
 
-                    We can also skip this step altogether by using the shape of the source image for the warped image.
+                    (or we can skip this step altogether and just use the shape of thesource image for the warped image).
                 </p>
                 <p>
-                    Next, we can create indices for the warped image,
-                        then apply the inverse homography matrix to map these points to the source image.
-
+                    However, border points of the warped image can be negative,
+                        in which case we must calculate the offset to ensure that all indices in the warped image are non-negative.
+                </p>
+                <p>
+                    Next, we calculate the height and width of the destination image,
+                        and use these dimensions to create indices for the warped image.
+                    We then apply the inverse offset to these indices (to align with the bounds of the warped image),
+                        and apply the inverse homography matrix to these translated indices.
+                    This will map the non-negative indices of the destination image to the source image.
+                </p>
+                <p>
                     Finally, we interpolate the pixels of the source image to the destination image 
-                    (I used <code>scipy.interpolate.RectBivariateSpline</code>), 
+                        (I used <code>scipy.interpolate.RectBivariateSpline</code>), 
                         and apply a mask to the destination image to remove the parts that are not in the source image.
                 </p>
                 <div class="header-line"></div>
                 <h2 id="part-4"> Part 4: Image Rectification </h2>
+                    <p>
+                        Here are some results I got from rectifying the images.
+                        [ note that I was able to avoid some inconveniences by using the shape of the source image for the warped image :D ].
+                    </p>
                     <div class="image-grid">
                         <img src="./assets/proj4/rect1a.png">
                         <img src="./assets/proj4/rect1b.png">
@@ -151,8 +177,76 @@
 
                 </p>
                 <div class="header-line"></div>
-                <h2 id="part-5"> Part 5: Blend The Images into a mosaic </h2>
+                <h2 id="part-5"> Part 5: Blend The Images into a Mosaic </h2>
+                <div class="image-text-container">
+                    <div class="image-text-item">
+                        <div class="text-container">
+                            <p>
+                                I was lazy ish and did not want to manually label correspondences between images.
 
+                                This led me to implement automatic non-maximal suppression and feature matching.
+
+                                Since 4B is not due, I will not go into details of those implementation :)
+                            </p>
+                            <p>
+                                Here is an example of feature matching between two images.
+                            </p>
+                        </div>
+                        <div class="image-container">
+                            <img style="width: auto; height: 600px;" src="./assets/proj4/matched_features.png">
+                        </div>
+                        
+                        <div class="text-container">
+                            <p>
+                                Using the matched features, 
+                                    I computed the homography between the base image (chosen to be the top), 
+                                    and the query image (the bottom). 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-text-container">
+                    <div class="image-text-item">
+                        <div class="image-container">
+                            <img src="./assets/proj4/mosaic_bounds.png">
+                        </div>
+                        <div class="text-container">
+                            <p>
+                                I warped the corners of the query image to the base image, 
+                                    then found the bounding box of the entire image after stitching.
+        
+                                I computed the translation to apply to the final image to avoid negative indices.
+                            </p>
+                            <p>
+                                This all boiled down to a mess of calling <code>np.min</code> and <code>np.max</code> all sorts of corner points
+                                    and I really hope I never feel so confused with something so simple ever again.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    ok. cool. 
+                </p>
+                <p>
+                    I implemented blending with a two-level laplacian pyramid. 
+                    
+                    The mask was generated by taking the distance transform of the polygon made by the four corners of the images.
+
+                    I used <code>cv2.fillPoly</code> to fill the polygon formed by vertices of <code>img1</code> with 1, 
+                        then used <code>cv2.distanceTransform</code> to get the distance transform of the polygon.
+                    I repeated this for <code>img2</code>, 
+                        and took the ratio of the distance transforms to get the blending mask.
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/blend_mask.png">
+                    <img src="./assets/proj4/blend_hf.png">
+                    <img src="./assets/proj4/blend_lf.png">
+                </div>
+                <p> putting it all together </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/blend_final.png">
+                    <img src="./assets/proj4/blend_annotated.png">
+                </div>
             </div>
         </div>
     </body>

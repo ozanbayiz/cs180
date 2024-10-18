@@ -167,7 +167,7 @@ function openOverlay(imageSrc) {
     enlargedImage.src = imageSrc;
     overlay.style.display = 'flex';
     
-    imageGrid = Array.from(document.querySelectorAll('.image-grid img'));
+    imageGrid = Array.from(document.querySelectorAll('.image-grid img, .image-container img, .image-text-container img'));
     currentImageIndex = imageGrid.findIndex(img => img.src === imageSrc);
     
     updateNavigationButtons();
@@ -216,7 +216,7 @@ function handleKeyPress(event) {
 }
 
 function setupImageGrid() {
-    const images = document.querySelectorAll('.image-grid img');
+    const images = document.querySelectorAll('.image-grid img, .image-container img, .image-text-container img');
     images.forEach(img => {
         img.addEventListener('click', function() {
             openOverlay(this.src);

@@ -1,3 +1,16 @@
+:root {
+    --main-bg-color: black;
+    --main-text-color: white;
+    --accent-color: violet;
+    --code-color: greenyellow;
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 55px;
+
+    /* New text size variables */
+    --text-size-desktop: 14px;
+    --text-size-mobile: 12px;
+}
+
 /* TEXT */
 html, body {
     margin: 0;
