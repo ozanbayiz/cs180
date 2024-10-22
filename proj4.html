@@ -40,6 +40,24 @@
                         <li>
                             <a href="#part-5">Blend The Images into a Mosaic</a>
                         </li>
+                        <li>
+                            <a href="#part-6">Detecting Corner Features in An Images</a>
+                        </li>
+                        <li>
+                            <a href="#part-7">Extracting Feature Descriptors</a>
+                        </li>
+                        <li>
+                            <a href="#part-8">Matching Features Between Images</a>
+                        </li>
+                        <li>
+                            <a href="#part-9">RANSAC</a>
+                        </li>
+                        <li>
+                            <a href="#part-10">More Mosaics</a>
+                        </li>
+                        <li>
+                            <a href="#part-11">Reflection</a>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -184,9 +202,10 @@
                             <p>
                                 I was lazy ish and did not want to manually label correspondences between images.
 
-                                This led me to implement automatic non-maximal suppression and feature matching.
-
-                                Since 4B is not due, I will not go into details of the implementation yet :)
+                                This led me to implement 
+                                    <a href="#part-6">automatic non-maximal suppression</a>, 
+                                    <a href="#part-7">feature description extraction</a>, 
+                                    and <a href="#part-8">feature matching</a>.
                             </p>
                             <p>
                                 Here is an example of feature matching between two images.
@@ -247,6 +266,96 @@
                     <img src="./assets/proj4/blend_final.png">
                     <img src="./assets/proj4/blend_annotated.png">
                 </div>
+                <div class="header-line"></div>
+                <h2 id="part-6">Part 6: Detecting Corner Features in An Images</h2>
+                <p>
+                    We use the Harris corner detector that was provided in the starter code (thank you!).
+                </p>
+                <p>
+                    However, this is too many points!
+                    So we implement automatic non-maximal suppression to get the top corners. K-D Trees were particularly helpful. 
+                    Here are the results of taking the top 500 corners.
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/corners1a.png">
+                    <img src="./assets/proj4/corners1b.png">
+                </div>
+                <div class="image-grid">
+                    <img src="./assets/proj4/corners2a.png">
+                    <img src="./assets/proj4/corners2b.png">
+                </div>
+                 <div class="header-line"></div>
+                <h2 id="part-7">Part 7: Extracting Feature Descriptors</h2>
+                <p>
+                    We take (8s)px x (8s)px patches centered around each corner returned by ANMS.
+                </p>
+                <p>
+                    We then downsample each patch by taking every (s)th pixel and normalized each patch to have zero mean and unit variance.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj4/feature_descriptors.png">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-8">Part 8: Matching Features Between Images</h2>
+
+                <p>
+                    For every feature descriptor in image \(x\), we find the two most similar feature descriptors in image \(y\). 
+                    In accordance to Lowe's test,
+                        we threshold the ratio \(r = \frac{err_{\text{1st match}}}{err_{\text{2nd match}}}\)
+                        as a test to remove bad matchings.
+                </p>
+
+                <p>
+                    We cross-validate this by checking how many of the best matches from \(y\) are also the best matches for each feature descriptor in \(x\).
+                </p>
+
+                <div class="image-grid">
+                    <img src="./assets/proj4/fm1.png">
+                    <img src="./assets/proj4/fm2.png">
+                    <img src="./assets/proj4/fm3.png">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-9">Part 9: RANSAC</h2>
+
+                <p>
+                    Some bad correspondences are unavoidable, 
+                        so we use RANSAC to remove outliers.
+                </p>
+
+                <p>
+                    The intuition behind RANSAC is to randomly sample a small number (4) of correspondences, 
+                        compute the homography with this sample of source and destination points, 
+                        apply the homography to all source points,
+                        and count how many warped source points are within some error threshold of their corresponding destination points.
+                    
+                    The correspondences within this threshold are inliers.
+                </p>
+                <p>
+                    We repeat this process many times and keep the largest set of inliers as our correspondences.
+                </p>
+
+                <p></p>
+                    Here are some results of RANSAC.
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/ransac1a.png">
+                    <img src="./assets/proj4/ransac1b.png">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-10">Part 10: More Mosaics</h2>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-11">Reflection</h2>
+                <p>
+                    I honestly spent more time working on the website than the actual project.
+                </p>
             </div>
         </div>
     </body>

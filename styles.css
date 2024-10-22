@@ -55,6 +55,12 @@ p a { color: var(--code-color); }
 img {
     max-width: 100%;
     height: auto;
+    border: 1px solid transparent;
+}
+
+img:hover {
+    border: 1px solid var(--accent-color);
+    cursor: pointer;
 }
 
 /* ASCII Art */
