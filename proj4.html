@@ -7,12 +7,13 @@
 
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles.css">
-        <link rel="icon" href="./assets/proj4/nyan_cat.gif">
+        <link rel="icon" href="./assets/proj4/cool_bug.jpg">
         <script src="main.js"></script>
         <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script type="text/javascript" id="MathJax-script" async
             src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
         </script>
+        <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
     </head>
     <body> 
@@ -67,7 +68,7 @@
 
                 <h2> [Auto]stitching Photo Mosaics </h2>
                 <div class="image-container">
-                    <img src="./assets/misc/nyan_cat.gif">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj4/cool_bug.jpg">
                 </div>
                 <br>
                 <div class="header-line"></div>
@@ -266,6 +267,32 @@
                     <img src="./assets/proj4/blend_final.png">
                     <img src="./assets/proj4/blend_annotated.png">
                 </div>
+
+                <h2>Part 5.X: Manual Correspondences</h2>
+                <p>
+                    I thought I could get away with not manually labeling correspondences between images.
+                    I was wrong.
+                </p>
+                <div class="image-container">
+                    <img style="max-height: 100px; width: auto;" src="./assets/proj4/truth_hurts.png">
+                </div>
+                <p> Here are some manually labeled correspondences and the mosaics they yielded. </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/manual_correspondences1.png">
+                    <img src="./assets/proj4/manual_correspondences2.png">
+                    <img src="./assets/proj4/manual_correspondences3.png">
+                </div>
+
+                <div class="image-grid">
+                    <img src="./assets/proj4/manual_mosaic1.png">
+                    <img src="./assets/proj4/manual_mosaic2.png">
+                    <img src="./assets/proj4/manual_mosaic3.png">
+                </div>
+                <p>
+                    (after I mentioned that I implemented automatic correspondences, 
+                        Prof. Efros told me that I should still do this step manually so I can understand the tediousness that motivates automating this process.
+                    It seems this fate was unavoidable)    
+                </p>
                 <div class="header-line"></div>
                 <h2 id="part-6">Part 6: Detecting Corner Features in An Images</h2>
                 <p>
@@ -350,12 +377,74 @@
 
                 <h2 id="part-10">Part 10: More Mosaics</h2>
 
+                <p>
+                    Here are all of the outfits I took pictures of, stitched together.
+                </p>
+                <div class="image-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <img src="./assets/proj4/mosaic1.png">
+                    <img src="./assets/proj4/mosaic2.png">
+                    <img src="./assets/proj4/mosaic3.png">
+                    <img src="./assets/proj4/mosaic4.png">
+                    <img src="./assets/proj4/mosaic6.png">
+                    <img src="./assets/proj4/blend_final.png">
+                </div>
+                <p>
+                    Here is a comparison of the mosaics from manual and automatic correspondences:
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj4/automatic_mosaic1_labeled.png">
+                    <img src="./assets/proj4/manual_mosaic1_labeled.png">
+                </div>
+
+                <div class="image-grid">
+                    <img src="./assets/proj4/automatic_mosaic2_labeled.png">
+                    <img src="./assets/proj4/manual_mosaic2_labeled.png">
+                </div>
+
+                <div class="image-grid">
+                    <img src="./assets/proj4/automatic_mosaic3_labeled.png">
+                    <img src="./assets/proj4/manual_mosaic3_labeled.png">
+                </div>
+
                 <div class="header-line"></div>
 
-                <h2 id="part-11">Reflection</h2>
-                <p>
-                    I honestly spent more time working on the website than the actual project.
+                <h2 id="part-11">What have I learned?</h2>
+                <p></p>
+                    I though it was interesting how the math underlying perspective warps is so simple.
+                    Considering how drastically the image changes after warping,
+                        I thought the whole procedure would be much more complicated.
                 </p>
+                <p>
+                    Ironically, the hardest part of this project was the blending step, 
+                        which I had expected to be easy since I had done it for project 2.
+                    I did not expect to be so challenged by 
+                        calculating the bounding box of the stitched image, 
+                        the offset to avoid negative indices, 
+                        and creating the blending mask.
+                </p>
+
+                <p>
+                    I think the coolest and most important things I learned are:
+                </p>
+                <ol>
+                    <li style="margin-bottom: 10px;">to not underestimate the simplicity of things that seem complex</li>
+                    <li style="margin-bottom: 10px;">to not underestimate the complexity of things that seem simple</li> 
+                </ol>
+                <p></p>
+                    Also, now that I look at the submission requirements, 
+                        I realize that I should have manually labeled correspondences between images.
+                    Another key takeaway is that I should always fully understand the task I have been given before I begin.
+                </p>
+                <div class="header-line"></div>
+                <h2>Extra: Ozan does not reinvent the wheel</h2>
+                <p>
+                    The <code>cv2.stitcher</code> class is a wrapper for OpenCV's stitching functions.
+                    I thought it would be fun to use this existing code, along with an HTML scipt I found online, to create a 
+                    <a href="./assets/proj4/room_viewer.html">360° panorama viewer</a>.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj4/room_panorama.jpg">
+                </div>
             </div>
         </div>
     </body>
