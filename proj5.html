@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>proj5</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        <script src="main.js"></script>
+        <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+    </head>
+    <body>
+        <div class="content-wrapper">
+            <div id="mySidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <a href="index.html" class="back-link">back</a>
+                    <div class="toggle-btn" onclick="toggleNav()">&gt;&gt;&gt;</div>
+                </div>
+                <div class="header-line"></div>
+                <div class="sidebar-content">
+                    <ol>
+                        <li><strong><a href="#5A">5A</a></strong></li>
+                        <li><a href="#part-0">Part 0: Setup</a></li>
+                        <li><a href="#part-1">Part 1: Sampling Loops</a>
+                            <ol>
+                                <li><a href="#part-1-1">1.1 Implementing the Forward Process</a></li>
+                                <li><a href="#part-1-2">1.2 Classical Denoising</a></li>
+                                <li><a href="#part-1-3">1.3 One-Step Denoising</a></li>
+                                <li><a href="#part-1-4">1.4 Iterative Denoising</a></li>
+                                <li><a href="#part-1-5">1.5 Diffusion Model Sampling</a></li>
+                                <li><a href="#part-1-6">1.6 Classifier-Free Guidance (CFG)</a></li>
+                                <li><a href="#part-1-7">1.7 Image-to-image Translation</a>
+                                    <ol>
+                                        <li><a href="#part-1-7-1">1.7.1 Editing Hand-Drawn and Web Images</a></li>
+                                        <li><a href="#part-1-7-2">1.7.2 Inpainting</a></li>
+                                        <li><a href="#part-1-7-3">1.7.3 Text-Conditional Image-to-image Translation</a></li>
+                                    </ol>
+                                </li>
+                                <li><a href="#part-1-8">1.8 Visual Anagrams</a></li>
+                                <li><a href="#part-1-9">1.9 Hybrid Images</a></li>
+                            </ol>
+                        </li>
+                    </ol>
+                    <div class="header-line"></div>
+                    <ol>
+                        <li><strong><a href="#5B">5B</a></strong></li>
+                        <li><a href="#part-2">Part 1: Training a Single-Step Denoising UNet</a>
+                            <ol>
+                                <li><a href="#part-2-1">1.1 Implementing the UNet</a></li>
+                                <li><a href="#part-2-2">1.2 Using the UNet to Train a Denoiser</a>
+                                    <ol>
+                                        <li><a href="#part-2-2-1">1.2.1 Training</a></li>
+                                        <li><a href="#part-2-2-2">1.2.2 Out-of-Distribution Testing</a></li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li><a href="#part-3">Part 2: Training a Diffusion Model</a>
+                            <ol>
+                                <li><a href="#part-3-1">2.1 Adding Time Conditioning to UNet</a></li>
+                                <li><a href="#part-3-2">2.2 Training the UNet</a></li>
+                                <li><a href="#part-3-3">2.3 Sampling from the UNet</a></li>
+                                <li><a href="#part-3-4">2.4 Adding Class-Conditioning to UNet</a></li>
+                                <li><a href="#part-3-5">2.5 Sampling from the Class-Conditioned UNet</a></li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div id="main">
+                <h1>project 5</h1>
+                <h2>Fun With Diffusion Models!</h2>
+                <div class="image-container">
+                    <img src="./assets/proj5/cover.jpeg" alt="cover">
+                </div>
+                <div class="header-line"></div>
+
+                <h1 id="5A">Part A: The Power of Diffusion Models!</h1>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-0">Part 0: Setup</h2>
+
+                <p>
+                    The seed I chose is 80808. Here are the images I generated for this part with 20 inference steps:
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/original_generated_imgs.png" alt="original_generated_imgs">
+                </div>
+                
+                <p>
+                    The quality of the images seems pretty consistent across different text prompts.
+                </p>
+                <p>
+                    Here is the result of picking different numbers of inference steps:
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/comparing_different_num_inference_steps.png" alt="100_steps">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-1">Part 1: Sampling Loops</h2>
+                <h3 id="part-1-1">1.1 Implementing the Forward Process</h3>
+                <p>
+                    I implemented the forward process according to the spec.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/forward_noising_camp.png" alt="forward_noising_camp">
+                </div>
+
+                <br>
+
+                <h3 id="part-1-2">1.2 Classical Denoising</h3>
+                <p>
+                    I tried to denoise the noised image with gaussian filtering. This worked about as well as expected.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/filtered_noise_levels.png" alt="classical_denoising_camp">
+                </div>
+
+                <br>
+
+                <h3 id="part-1-3">1.3 One-Step Denoising</h3>
+                <p>
+                    I implemented the one-step denoising process.
+                    I noticed that single-step denoising on an image with a lot of noise changed the content of the image.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/single_step_denoising.png" alt="single_step_denoising_camp">
+                </div>
+
+                <br>
+
+                <h3 id="part-1-4">1.4 Iterative Denoising</h3>
+                <p>
+                    I implemented the iterative denoising process according to the spec. 
+                    Here's a gif created from every frame of the denoising process.
+                </p>
+                <div class="image-container">
+                    <img style="height: 200px; width: auto;" src="./assets/proj5/5a/iterative_denoise.gif" alt="iterative_denoising_camp">
+                </div>
+                <p>
+                    And here's a comparison of the iterative denoising and other denoising methods:
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/iter_denoise_comparisons.png" alt="iter_denoise_comparison">
+                </div>
+                <br>
+
+                <h3 id="part-1-5">1.5 Diffusion Model Sampling</h3>
+
+                <p> By applying the iterative denoising steps that I defined in part 1.4 to pure noise,
+                    I was able to generate new images.
+                </p>
+
+                <div class="image-grid">
+                    <img src="./assets/proj5/5a/generated_imgs/1.png" alt="generated_imgs_1">
+                    <img src="./assets/proj5/5a/generated_imgs/2.png" alt="generated_imgs_2">
+                    <img src="./assets/proj5/5a/generated_imgs/3.png" alt="generated_imgs_3">
+                    <img src="./assets/proj5/5a/generated_imgs/4.png" alt="generated_imgs_4">
+                    <img src="./assets/proj5/5a/generated_imgs/5.png" alt="generated_imgs_5">
+                </div>
+
+
+                <br>
+
+                <h3 id="part-1-6">1.6 Classifier-Free Guidance (CFG)</h3>
+                
+                <p>
+                    I implemented classifier-free guidance according to the spec.
+                </p>
+
+                <div class="image-grid">
+                    <img src="./assets/proj5/5a/generated_cfg/0.png" alt="generated_cfg_1">
+                    <img src="./assets/proj5/5a/generated_cfg/1.png" alt="generated_cfg_2">
+                    <img src="./assets/proj5/5a/generated_cfg/2.png" alt="generated_cfg_3">
+                    <img src="./assets/proj5/5a/generated_cfg/3.png" alt="generated_cfg_4">
+                    <img src="./assets/proj5/5a/generated_cfg/4.png" alt="generated_cfg_5">
+                </div>
+
+                <br>
+
+                <h3 id="part-1-7">1.7 Image-to-image Translation</h3>
+
+                <p>
+                    I applied various amounts of noise to the test image to get the following results.
+                </p>
+                
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.0/test_img_altogether.png" alt="image_to_image_translation">
+                </div>
+
+                <p>
+                   Here is the result of applying different amounts of noise to cheems.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.0/cheems_altogether.png" alt="image_to_image_translation">
+                </div>
+
+                <p>
+                    And here are the results for a picture I found on a 
+                    <a href="https://en.wikipedia.org/wiki/Ecdysis">cool wikipedia page about ecdysis</a>.
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.0/spider_altogether.png" alt="image_to_image_translation">
+                </div>
+
+                <br>
+
+                <h4 id="part-1-7-1">1.7.1 Editing Hand-Drawn and Web Images</h4>
+                
+                <p>
+                    The image I chose from the web is nyan cat.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.1/nyan_cat.png" alt="image_to_image_translation">
+                </div>
+
+                <p>
+                    Here are the results of editing two images I drew.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.1/moon_sketch.png" alt="image_to_image_translation">
+                </div>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.1/drawn_cat.png" alt="image_to_image_translation">
+                </div>
+
+                <br>
+                
+                <h4 id="part-1-7-2">1.7.2 Inpainting</h4>
+
+            
+                <p>
+                    Here is the inpainted image of the Campanile. 
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.2/camp_inpainted.png" alt="image_to_image_translation">
+                </div>
+                
+                <p>
+                    I wondered how the diffusion model would fill in nyan cat's rainbow trail. I was sort of disappointed.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.2/nyan_cat_inpainted.png" alt="image_to_image_translation">
+                </div>
+                
+                <p>
+                    I also wondered how the diffusion model would fill in Aphex Twin's face; I was similarly disappointed.
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.2/aphex_inpainted.png" alt="image_to_image_translation">
+                </div>
+
+                <br>
+                <h4 id="part-1-7-3">1.7.3 Text-Conditional Image-to-image Translation</h4>
+
+                <p>
+                    I just turned everything into a rocket.
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.3/rocket_camp.png" alt="image_to_image_translation">
+                </div>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.3/rocket_nyan_cat.png" alt="image_to_image_translation">
+                </div>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.7.3/rocket_cheems.png" alt="image_to_image_translation">
+                </div>
+
+                <h3 id="part-1-8">1.8 Visual Anagrams</h3>
+
+                <p> I was pleasantly surprised by how well this part worked. Here is my result for 
+                    <i style="color: cyan;">
+                        A visual anagram where on one orientation 
+                        "an oil painting of people around a campfire" is displayed and, when flipped, 
+                        "an oil painting of an old man" is displayed.
+                    </i>
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.8/old_man_campfire.png" alt="image_to_image_translation">
+                </div>
+
+                <p>
+                    Here are my other results:
+                </p>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.8/skull_coast.png" alt="image_to_image_translation">
+                </div>
+
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.8/dog_man_hhat.png" alt="image_to_image_translation">
+                </div>
+                <p>
+                    (NOTE: I'm well aware that the left image is not a pencil, but I plan to keep it this way because I think it's funny.)
+                </p>
+
+                <br>
+
+                <h3 id="part-1-9">1.9 Hybrid Images</h3>
+                <p>
+                    Although I got odd results, I'm pretty sure I implemented this part correctly. To justify my odd results, I'll explain my steps.
+                </p>
+
+                <ol>
+                    <li>
+                        <p>
+                            Given my two prompts, \(p_1\) and \( p_2 \) I found noise estimates \(\epsilon_1(x_t, t, p_1) \) and  \( \epsilon_2(x_t, t, p_2)\).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                           I convolved \(\epsilon_1\) and \(\epsilon_2 \) with a Gaussian kernel (\(k=33, \sigma = 2\), as recommended) to get the low-frequency components, \(\epsilon_1^{(LF)}\) and \(\epsilon_2^{(LF)}\).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            I got the high-frequency component \(\epsilon_2^{(HF)} = \epsilon_2 - \epsilon_2^{(LF)}\).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            I added \(\epsilon_1^{(HF)}\) and \(\epsilon_2^{(HF)}\) together to get the hybrid noise estimate \(\epsilon_{\text{hybrid}}\).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            I used \( \epsilon_{\text{hybrid}} \) to denoise the image at time \(t\).
+                        </p>
+                    </li>
+                </ol>
+                <p>
+                    here is the result I got for the skull and waterfall:
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj5/5a/1.9/skull_waterfall.png" alt="hybrid_imgs">
+                </div>
+
+                <p>
+                    here are the other results I got:
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj5/5a/1.9/rocket_man_hat.png" alt="hybrid_imgs">
+                    <img src="./assets/proj5/5a/1.9/hipster_barista_dog.png" alt="hybrid_imgs">
+                    <img src="./assets/proj5/5a/1.9/old_man_snow.png" alt="hybrid_imgs">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h1 id="5B">Part B: Diffusion Models from Scratch!</h1>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-2">Part 1: Training a Single-Step Denoising UNet</h2>
+                <h3 id="part-2-1">1.1 Implementing the UNet</h3>
+                <p>
+                    I'm not sure what to show for this part. But I did it!
+                </p>
+
+                <br>
+
+                <h3 id="part-2-2">1.2 Using the UNet to Train a Denoiser</h3>
+                <p>
+
+                    Given a clean image, \(x\), I noised it to get \(z = x + \sigma \epsilon\), where \(\epsilon \sim \mathcal{N}(0, 1)\), and \(\sigma \in \{0.0, 0.2, 0.4, 0.6, 0.8, 1.0\}\).
+                </p>
+                <div class="image-container">
+                    <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/noising_process.png" alt="noisy_imgs">
+                </div>
+                
+                <p>
+
+                </p>
+
+                <div class="image-text-container">
+                    <div class="image-text-item">
+                        <div class="text-container">
+                            <p>
+                            using this, I created a dataloader for training, which outputted batches of the form \((x, z)\) with \( \sigma = 0.5 \).
+                        </p>
+                    </div>
+                    <div class="image-container">
+                            <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/noising_dataloader.png" alt="noisy_imgs">
+                        </div>
+                    </div>
+                </div>
+
+                <h4 id="part-2-2-1">1.2.1 Training</h4>
+
+                <p>
+                    I trained the UNet for 5 epochs as desired and plotted training loss.
+                </p>
+                <div class="image-container">
+                    <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/uncond_unet_6_epochs.png" alt="noisy_imgs">
+                </div>
+
+                <div class="image-text-container">
+                    <div class="image-text-item">
+                        <div class="text-container">
+                            I sampled after 1 epoch.
+                        </div>
+                        <div class="image-container">
+                            <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/1_epoch_samples.png" alt="noisy_imgs">
+                        </div>
+                    </div>
+                    <div class="image-text-item">
+                        <div class="text-container">
+                            And 6 epochs.
+                        </div>
+                        <div class="image-container">
+                            <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/5_epoch_samples.png" alt="noisy_imgs">
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    Pretty good!
+                </p>
+
+                <br>
+
+                <h4 id="part-2-2-2">1.2.2 Out-of-Distribution Testing</h4>
+
+                <p>
+                    Then I tried denoising images with \(\sigma \neq 0.5\)
+                </p>
+
+                <div class="image-container">
+                    <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/uncond/out_of_dist_samples.png" alt="noisy_imgs">
+                </div>
+
+                <p>
+                    still, not bad!
+                </p>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-3">Part 2: Training a Diffusion Model</h2>
+
+                <h3 id="part-3-1">2.1 Adding Time Conditioning to UNet</h3>
+
+                <p>
+                    I followed the spec and implemented time conditioning. 
+                    As the spec recommended, I used a a hidden dimension of 64 and a batch size of 128.
+                    For optimization, I used Adam with a learning rate of 0.001 and an exponential learning rate scheduler with \(\gamma = 0.9\).
+                </p>
+
+                <br>
+
+                <h3 id="part-3-2">2.2 Training the UNet</h3>
+                <p>
+                    Here is the training loss for the time-conditioned UNet during 20 epochs.
+                </p>
+                <div class="image-container">
+                    <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/time_cond/training_loss.png">
+                </div>
+                <br>
+
+                <h3 id="part-3-3">2.3 Sampling from the UNet</h3>
+                here are my results for 5 and 20 epochs of training.
+                <div class="image-grid">
+                    <img src="./assets/proj5/5b/time_cond/5_epoch_samples.png" alt="time_cond_samples">
+                    <img src="./assets/proj5/5b/time_cond/20_epoch_samples.png" alt="time_cond_samples_2">
+                </div>
+                <br>
+
+                <h3 id="part-3-4">2.4 Adding Class-Conditioning to UNet</h3>
+                <p>
+                    I implemented class conditioning as specified in the spec.
+                    I used the same hyperparameters as in part 2.2,
+                    and got the following training loss for 20 epochs.
+                </p>
+                <div class="image-container">
+                    <img style="max-height: 500px; width: auto;" src="./assets/proj5/5b/class_cond/training_loss.png">
+                </div>
+
+                <h3 id="part-3-5">2.5 Sampling from the Class-Conditioned UNet</h3>
+                <p>
+                    here are my results for 5 and 20 epochs of training.
+                </p>
+                <div class="image-grid">
+                    <img src="./assets/proj5/5b/class_cond/5_epoch_samples.png" alt="class_cond_samples">
+                    <img src="./assets/proj5/5b/class_cond/20_epoch_samples.png" alt="class_cond_samples_2">
+                </div>
+
+                <p>
+                    Frankly the denoised results do not look as good as I would have wanted them to.
+                    My handwriting is also pretty bad, so maybe it's not my place to be so critical.
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
