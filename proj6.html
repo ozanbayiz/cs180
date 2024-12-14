@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>proj6</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" href="./assets/proj4/cool_bug.jpg">
+        <script src="main.js"></script>
+        <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+        <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+    </head>
+    <body> 
+        <div id="content-wrapper">
+            <div id="mySidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <a href="index.html" class="back-link">back</a>
+                    <div class="toggle-btn" onclick="toggleNav()">&gt;&gt;&gt;</div>
+                </div>
+                <div class="header-line"></div>
+                <div class="sidebar-content">
+                    <ol>
+                        <li>
+                            <a href="#part-1">Part 1: Fit a Neural Field to a 2D Image</a>
+                        </li>
+                        <li>
+                            <a href="#part-2">Part 2: Fit a Neural Radiance Field from Multi-view Images</a>
+                            <ol>
+                                <li></li>
+                                    <a href="#part-2-1">2.1 Create Rays from Cameras</a>
+                                </li>
+                                <li>
+                                    <a href="#part-2-2">2.2 Sampling Rays</a>
+                                </li>
+                                <li>
+                                    <a href="#part-2-3">2.3 Putting the Dataloading All Together</a>
+                                </li>
+                                <li>
+                                    <a href="#part-2-4">2.4 Implementing the NeRF</a>
+                                </li>
+                                <li>
+                                    <a href="#part-2-5">2.5 Volume Rendering</a>
+                                </li>
+                                <li>
+                                    <a href="#part-2-6">Results</a>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <a href="#bw">Bells and Whistles</a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div id="main">
+                <h1> project 6 </h1>
+
+                <h2> Neural Radiance Field! </h2>
+                <div class="image-container">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/agony.jpeg">
+                </div>
+                <br>
+                <div class="header-line"></div>
+                <h2 id="part-1">Part 1: Fit a Neural Field to a 2D Image</h2>
+                <h3> Implementation </h3>
+                <p>
+                    For my initial implementation, I used what was recommended in the project description:
+                    <ul>
+                        <li>4 hidden layers</li>
+                        <li>256 hidden dimensions</li>
+                        <li>10-band positional encoding</li>
+                    </ul>
+                </p>
+
+                <h3> Results </h3>
+                Using the above parameters, I was able to fit a neural field to the image.
+                <div class="image-container">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_256.png">
+                </div>
+                <div class="image-container">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_256_psnr.png">
+                </div>
+                <p>
+                    I fit the neural field to an image of my cat.
+                </p>
+                <div class="image-container">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_cat.png">
+                </div>
+                <div class="image-container">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_cat_psnr.png">
+                </div>
+
+                <h3> Hyperparameter Tuning</h3>
+                <p>
+                    The hyperparameters I varied were the number of frequency bands and the hidden dimension size.
+                </p>
+                <p>
+                    Varying the number of frequency bands generally led to worse results. 
+                    The result of using 15 frequency bands was pretty interesting to me.
+                </p>
+                <div class="image-grid">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_4_256.png">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_15_256.png">
+                </div>
+                <div class="image-grid">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_4_256_psnr.png">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_15_256_psnr.png">
+                </div>
+
+                <p>
+                    Altering the hidden dimension size did not have much of an effect on the results.
+                </p>
+                <div class="image-grid">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_128.png">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_384.png">
+                </div>
+                <div class="image-grid">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_128_psnr.png">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/NeF_fox_10_384_psnr.png">
+                </div>
+
+                <div class="header-line"></div>
+
+                <h2 id="part-2">Part 2: Fit a Neural Radiance Field from Multi-view Images</h2>
+
+                <h3 id="part-2-1">2.1 Create Rays from Cameras</h3> 
+                <p>
+                    I implemented <code>transform</code>, <code>pixel_to_camera</code>, and <code>pixel_to_ray</code> using tensor operations.
+                    I used einops when I got sick of tensor wrangling.
+                </p>
+                <br>
+
+                <h3 id="part-2-2">2.2 Sampling Rays</h3>
+
+                <p>
+                    I implemented <code>sample_rays</code> by first computing how many rays to sample from each image.
+                    I sampled this amount of pixel coordinates from each image,
+                        computed \(r_d, r_o\) using the appropriate camera parameters, and returned these rays alongside the ground truth pixel values.
+
+                    When the <code>RaysDataset</code> is initialized, it precomputes pixel coordinates and the corresponding rays for image 1 
+                    in order to support the visualization code.
+                </p>
+
+                <br>
+
+                <h3 id="part-2-3">2.3 Putting the Dataloading All Together</h3>
+
+                <div class="image-grid">
+                    <img style="max-height: 300px; width: auto;" src="./assets/proj6/all_rays.png"> 
+                    <img style="max-height: 300px; width: auto;" src="./assets/proj6/1_img_rays.png">
+                    <img style="max-height: 300px; width: auto;" src="./assets/proj6/top_left_rays.png">
+                </div>
+
+                <br>
+
+                <h3 id="part-2-4">2.4 Implementing the NeRF</h3>
+
+                <p>
+                    I initially implemented the NeRF as recommended in the project description. 
+                    I wasn't sure if I had implemented it correctly,
+                        so I re-implemented it using <code>nn.ModuleList</code> 
+                        to make it easier to adjust hyperparameters.
+                    
+                    My final parameters were:
+                    <ul></ul>
+                        <li>10-layer MLP + 1 density layer + 3-layer color MLP</li>
+                        <li>384 hidden dimensions</li>
+                        <li>10-band positional encoding</li>
+                    </ul>
+
+                </p>
+
+                <br>
+
+                <h3 id="part-2-5">2.5 Volume Rendering </h3>
+                <p>
+                    I compute \(a_i = \exp(-\sigma_i \delta_i) \) for all \(i\).
+
+                    This lets me find each \(T_i\) using <code>torch.cumprod</code>.
+
+                    I weight each color \(c_i\) by \(w_i = T_i a_i\) and compute \(\hat{C} = \sum_i w_i c_i\) to get the final color.
+                </p>
+
+                <br>
+
+                <h3 id="part-2-6">2.6 Results</h3>
+
+                <p>
+                    128 samples per ray, 10000 rays per step, 10000 gradient steps (~3H on A1000 GPU). 
+                </p>
+                <div class="image-container">
+                    <img src="./assets/proj6/NeRF_training.png">
+                </div>
+                <p>
+                    (in a way, I made it to 30+ PSNR!)
+                </p>
+
+                <div class="image-grid">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/formation.gif">
+                    <img style="max-width: 300px; height: auto;" src="./assets/proj6/spherical_render.gif">
+                </div>
+                <h1 id="bw"> Bells and Whistles: New Background Color </h1>
+                <div class="image-text-container">
+                    <div class="image-text-item">
+                        <div class="text-container">
+                            <p>
+                                When rendering the pixel, I compute weights for the background with
+                                \( w_i = T_i(1 - a_i) \)
+                                and compute the final color as 
+                                \( \hat{C}(r) = \sum_i T_i a_i c_i + T_i( 1- a_i) c_{\text{bg}} \).
+                            </p>
+                        </div>
+                        <div class="image-container">
+                            <img style="max-width: 300px; height: auto;" src="./assets/proj6/spherical_render_blue.gif">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
